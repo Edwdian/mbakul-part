@@ -505,11 +505,24 @@
       </div>
 
       <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
-        <div class="p-5 border-b border-slate-100 font-extrabold text-[#002D5A] flex justify-between items-center">
-          <span class="flex items-center gap-2"><i class="fa-solid fa-users text-[#004B8D]"></i> Master 3 Role
-            Pengguna</span>
-          <span id="dash-user-count" class="text-xs text-zinc-500 font-semibold px-2.5 py-1 bg-slate-100 rounded-full">0
-            Pengguna</span>
+        <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+          <div class="flex items-center gap-2 font-extrabold text-[#002D5A]">
+            <i class="fa-solid fa-users text-[#004B8D]"></i>
+            <span>Daftar Pengguna Sistem</span>
+            <span id="dash-user-count" class="text-xs text-zinc-500 font-semibold px-2.5 py-0.5 bg-slate-100 rounded-full">0 Pengguna</span>
+          </div>
+          <!-- Filter Cepat Peran (Semua / Khusus Seller / Pembeli / Admin) -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <span class="text-slate-400 font-bold mr-1">Filter:</span>
+            <button type="button" onclick="filterUserRole('all')" id="u-filter-all" class="px-2.5 py-1 rounded-lg font-bold bg-[#004B8D] text-white transition">Semua</button>
+            <button type="button" onclick="filterUserRole('seller')" id="u-filter-seller" class="px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 transition flex items-center gap-1">
+              <i class="fa-solid fa-store text-emerald-600 text-[10px]"></i>
+              <span>Khusus Seller</span>
+              <span id="badge-count-seller" class="ml-0.5 px-1.5 py-0.2 rounded-full bg-emerald-600 text-white text-[9px]">0</span>
+            </button>
+            <button type="button" onclick="filterUserRole('pembeli')" id="u-filter-pembeli" class="px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition">Pembeli</button>
+            <button type="button" onclick="filterUserRole('admin')" id="u-filter-admin" class="px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition">Admin</button>
+          </div>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs">

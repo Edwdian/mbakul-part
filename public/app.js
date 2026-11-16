@@ -794,20 +794,64 @@ async function deleteProduct(id) {
   }
 }
 
-// User CRUD (Admin Pusat)
+let allAdminUsers = [];
+let currentAdminUserFilter = 'all';
+
 function toggleStoreNameField(role) {
   document.getElementById('u-store-wrapper').classList.toggle('hidden', role !== 'seller');
 }
 
-function renderAdminUsersTable(users) {
+function filterUserRole(role) {
+  currentAdminUserFilter = role;
+  ['all', 'seller', 'pembeli', 'admin'].forEach(r => {
+    const btn = document.getElementById(`u-filter-${r}`);
+    if (btn) {
+      if (r === role) {
+        btn.className = 'px-2.5 py-1 rounded-lg font-bold bg-[#004B8D] text-white transition flex items-center gap-1';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded-lg font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1';
+      }
+    }
+  });
+  renderAdminUsersTable();
+}
+
+function renderAdminUsersTable(usersData) {
+  if (usersData) {
+    allAdminUsers = usersData;
+    const sellerCount = allAdminUsers.filter(u => u.role === 'seller').length;
+    const sellerBadge = document.getElementById('badge-count-seller');
+    if (sellerBadge) sellerBadge.innerText = sellerCount;
+  }
+
   const tbody = document.getElementById('dash-user-tbody');
-  document.getElementById('dash-user-count').innerText = `${users.length} Pengguna`;
-  tbody.innerHTML = users.map(u => {
+  if (!tbody) return;
+
+  let filtered = allAdminUsers;
+  if (currentAdminUserFilter !== 'all') {
+    filtered = allAdminUsers.filter(u => u.role === currentAdminUserFilter);
+  }
+
+  document.getElementById('dash-user-count').innerText = `${filtered.length} Pengguna${currentAdminUserFilter !== 'all' ? ` (${currentAdminUserFilter.toUpperCase()})` : ''}`;
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="py-8 text-center text-slate-400">
+          <i class="fa-solid fa-users-slash text-2xl mb-1 block"></i>
+          <span>Tidak ada pengguna dengan peran ini.</span>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(u => {
     let roleBadge = '';
     if (u.role === 'admin') {
       roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-[#004B8D] uppercase">Admin Pusat</span>';
     } else if (u.role === 'seller') {
-      roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase">Seller</span>';
+      roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase flex items-center gap-1 w-fit"><i class="fa-solid fa-store text-[9px]"></i> Seller Lapak</span>';
     } else {
       roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-100 text-amber-800 uppercase">Pembeli</span>';
     }
@@ -816,12 +860,16 @@ function renderAdminUsersTable(users) {
       <tr class="hover:bg-slate-50 transition">
         <td class="py-3 px-4">
           <div class="font-bold text-[#002D5A]">${u.name}</div>
-          <div class="text-[11px] text-slate-500">${u.store_name ? '<i class="fa-solid fa-store text-emerald-600 mr-1"></i>' + u.store_name : '-'}</div>
+          <div class="text-[11px] text-slate-500">${u.store_name ? '<i class="fa-solid fa-store text-emerald-600 mr-1"></i><span class="font-bold text-emerald-800">' + u.store_name + '</span>' : '-'}</div>
         </td>
         <td class="py-3 px-4 font-mono text-zinc-600">${u.email}</td>
         <td class="py-3 px-4">${roleBadge}</td>
-        <td class="py-3 px-4 font-mono text-zinc-600">${u.phone || '-'}</td>
-        <td class="py-3 px-4 text-center font-bold text-slate-700">${u.total_products || 0}</td>
+        <td class="py-3 px-4 font-mono text-zinc-600">
+          ${u.phone ? `<a href="https://wa.me/${u.phone.replace(/[^0-9]/g, '')}" target="_blank" class="hover:text-emerald-600 hover:underline"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i>${u.phone}</a>` : '-'}
+        </td>
+        <td class="py-3 px-4 text-center font-bold text-slate-700">
+          <span class="px-2 py-0.5 rounded-full ${u.total_products > 0 ? 'bg-blue-50 text-[#004B8D]' : 'bg-slate-100 text-slate-400'}">${u.total_products || 0} Part</span>
+        </td>
         <td class="py-3 px-4 text-center">
           <button onclick='editUser(${JSON.stringify(u)})' class="px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg font-bold mr-1">Edit</button>
           ${currentUser && currentUser.id !== u.id ? `<button onclick="deleteUser(${u.id})" class="px-2.5 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold">Hapus</button>` : ''}
