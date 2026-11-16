@@ -23,16 +23,20 @@ async function seedData() {
       ('store_tagline', 'Otomotif & Suku Cadang Motor Bekas — Sinergi Kualitas Terpercaya')
     `);
 
-    // 2. Seed Users (Akun Utama: 1 Admin dan 1 Seller)
-    console.log('Seeding accounts: 1 Admin dan 1 Seller...');
+    // 2. Seed Users (Admin, Reseller/Seller, Pembeli)
+    console.log('Seeding accounts: 1 Admin, 4 Seller/Reseller, 1 Pembeli...');
     const defaultPasswordHash = await bcrypt.hash('password123', 10);
 
     await connection.query('DELETE FROM users');
     await connection.query(`
       INSERT INTO users (id, name, email, password, role, phone, store_name) VALUES 
       (1, 'Admin Toko MBG', 'admin@mbakul.com', ?, 'admin', '6281234567890', 'Kantor Pusat MBG'),
-      (2, 'Pakde Joko Motogarage', 'seller@mbakul.com', ?, 'seller', '6285712345678', 'Joko Motor Bekas Gaul')
-    `, [defaultPasswordHash, defaultPasswordHash]);
+      (2, 'Pakde Joko Motogarage', 'seller@mbakul.com', ?, 'seller', '6285712345678', 'Joko Motor Bekas Gaul'),
+      (3, 'Budi Santoso', 'budi@gmail.com', ?, 'pembeli', '6281311223344', NULL),
+      (4, 'Asep Saepudin', 'asep@mbakul.com', ?, 'seller', '6281298765432', 'Asep Part Racing & Copotan'),
+      (5, 'Hendra Wijaya', 'hendra@mbakul.com', ?, 'seller', '6285811223344', 'Hendra Kaki-Kaki & Velg'),
+      (6, 'Bambang Sukoco', 'bambang@mbakul.com', ?, 'seller', '6287766554433', 'Bambang Kelistrikan Motor')
+    `, [defaultPasswordHash, defaultPasswordHash, defaultPasswordHash, defaultPasswordHash, defaultPasswordHash, defaultPasswordHash]);
 
     // 3. Seed Products (Semua part milik Seller Pakde Joko #2)
     console.log('Seeding products for seller #2...');
