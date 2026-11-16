@@ -349,6 +349,100 @@ app.delete('/api/seller/products/:id', async (req, res) => {
   }
 });
 
+// 5.5 Order Management (In-App Checkout & Seller Confirmation)
+app.post('/api/orders', async (req, res) => {
+  try {
+    const authUser = await getAuthUser(req);
+    const { seller_id, customer_name, customer_phone, address, payment_method, total_price, proof_image, items } = req.body;
+
+    if (!customer_name || !customer_phone) {
+      return res.status(400).json({ success: false, message: 'Nama penerima dan nomor telepon wajib diisi!' });
+    }
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, message: 'Daftar item pesanan tidak boleh kosong!' });
+    }
+
+    const sellerId = Number(seller_id) || items[0].seller_id || 1;
+    const buyerId = authUser ? authUser.id : null;
+    const cleanPhone = String(customer_phone).replace(/[^0-9]/g, '');
+    const cleanMethod = payment_method || 'Transfer Bank';
+    const total = Number(total_price) || 0;
+    const itemsJson = JSON.stringify(items);
+
+    const [result] = await db.query(
+      'INSERT INTO orders (seller_id, buyer_id, customer_name, customer_phone, address, payment_method, total_price, proof_image, status, items) VALUES (?, ?, ?, ?, ?, ?, ?, ?, "pending", ?)',
+      [sellerId, buyerId, customer_name, cleanPhone, address || '', cleanMethod, total, proof_image || null, itemsJson]
+    );
+
+    res.json({
+      success: true,
+      message: 'Pesanan berhasil dikirim ke Seller!',
+      order_id: result.insertId
+    });
+  } catch (err) {
+    console.error('Order creation error:', err);
+    res.status(500).json({ success: false, message: 'Gagal membuat pesanan di sistem.' });
+  }
+});
+
+app.get('/api/seller/orders', async (req, res) => {
+  try {
+    const user = await getAuthUser(req);
+    if (!user || (user.role !== 'seller' && user.role !== 'admin')) {
+      return res.status(403).json({ success: false, message: 'Akses ditolak!' });
+    }
+
+    let sql = 'SELECT o.id, o.seller_id, o.buyer_id, o.customer_name, o.customer_phone, o.address, o.payment_method, o.total_price, o.proof_image, o.status, o.items, o.created_at, o.updated_at, u.store_name, u.name as seller_name, u.phone as seller_phone FROM orders o LEFT JOIN users u ON o.seller_id = u.id';
+    const params = [];
+
+    if (user.role !== 'admin') {
+      sql += ' WHERE o.seller_id = ?';
+      params.push(user.id);
+    }
+    sql += ' ORDER BY o.id DESC';
+
+    const [orders] = await db.query(sql, params);
+    res.json({ success: true, orders });
+  } catch (err) {
+    console.error('Fetch orders error:', err);
+    res.status(500).json({ success: false, message: 'Gagal mengambil data pesanan.' });
+  }
+});
+
+app.patch('/api/seller/orders/:id/status', async (req, res) => {
+  try {
+    const user = await getAuthUser(req);
+    if (!user || (user.role !== 'seller' && user.role !== 'admin')) {
+      return res.status(403).json({ success: false, message: 'Akses ditolak!' });
+    }
+
+    const { status } = req.body;
+    const validStatuses = ['pending', 'confirmed', 'rejected', 'completed'];
+    if (!validStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Status tidak valid!' });
+    }
+
+    let updateSql = 'UPDATE orders SET status = ? WHERE id = ?';
+    const params = [status, req.params.id];
+
+    if (user.role !== 'admin') {
+      updateSql += ' AND seller_id = ?';
+      params.push(user.id);
+    }
+
+    const [result] = await db.query(updateSql, params);
+    if (result.affectedRows === 0 && user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Akses ditolak: Pesanan ini bukan milik lapak Anda!' });
+    }
+
+    res.json({ success: true, message: 'Status pesanan berhasil diperbarui!' });
+  } catch (err) {
+    console.error('Update order status error:', err);
+    res.status(500).json({ success: false, message: 'Gagal memperbarui status pesanan.' });
+  }
+});
+
+
 // 6. Admin Management Users (OWASP A01: Strict Role Validation)
 app.get('/api/admin/users', async (req, res) => {
   try {

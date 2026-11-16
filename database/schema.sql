@@ -42,3 +42,21 @@ CREATE TABLE `products` (
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT `fk_product_seller` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 4. Table Orders (Pemesanan Langsung & Konfirmasi Pembayaran oleh Seller)
+CREATE TABLE IF NOT EXISTS `orders` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `seller_id` INT NOT NULL,
+  `buyer_id` INT NULL,
+  `customer_name` VARCHAR(150) NOT NULL,
+  `customer_phone` VARCHAR(50) NOT NULL,
+  `address` TEXT NULL,
+  `payment_method` VARCHAR(100) NOT NULL,
+  `total_price` DECIMAL(12, 2) NOT NULL,
+  `proof_image` LONGTEXT NULL,
+  `status` ENUM('pending', 'confirmed', 'rejected', 'completed') DEFAULT 'pending',
+  `items` JSON NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT `fk_order_seller` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

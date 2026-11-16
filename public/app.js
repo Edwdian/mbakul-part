@@ -1,3 +1,4 @@
+let cachedOrders = [];
 // app.js - Single Page Application Client untuk MBG Express (3 Roles: Admin, Seller, Pembeli)
 let currentUser = null;
 let storeSettings = { store_wa: '6281234567890' };
@@ -1028,6 +1029,7 @@ Mohon konfirmasi pesanan dan verifikasi pembayaran. Setelah pembayaran tervalida
 // Dashboard Tabs Switch (Segmented Control Pill Style)
 function switchDashTab(tab) {
   const tabs = [
+    { id: 'orders', icon: 'fa-clipboard-check', label: 'Pesanan Masuk' },
     { id: 'products', icon: 'fa-boxes-stacked', label: 'Kelola Produk Part' },
     { id: 'users', icon: 'fa-users-gear', label: 'Kelola Pengguna (Admin)' },
     { id: 'settings', icon: 'fa-headset', label: 'CS Pusat Platform' }
@@ -1058,6 +1060,7 @@ async function loadDashboardData() {
     document.getElementById('kpi-featured').innerText = products.filter(p => p.unggulan == 1).length;
 
     renderDashProductsTable(products);
+    await loadSellerOrders();
 
     if (currentUser.role === 'admin') {
       const uRes = await fetch('/api/admin/users');
@@ -1380,5 +1383,275 @@ async function handleSaveSettings(e) {
     showToast(data.message);
     storeSettings.store_wa = data.store_wa;
     updateHeaderWa(data.store_wa);
+  }
+}
+
+
+async function handleDirectOrderSubmit() {
+  if (cart.length === 0) {
+    showToast('Keranjang belanja Anda masih kosong!', 'error');
+    return;
+  }
+
+  const customerInfo = document.getElementById('order-customer-info')?.value.trim();
+  const address = document.getElementById('order-address')?.value.trim();
+  const proofBase64 = document.getElementById('proof-base64')?.value || null;
+
+  if (!customerInfo) {
+    showToast('Nama Penerima & No HP wajib diisi!', 'error');
+    document.getElementById('order-customer-info')?.focus();
+    return;
+  }
+
+  const isTransferOrQris = selectedPaymentMethodVal.includes('Transfer') || selectedPaymentMethodVal.includes('QRIS');
+  if (isTransferOrQris && !proofBase64) {
+    showToast('Wajib melampirkan foto struk transfer / bukti QRIS agar Seller bisa mengonfirmasi pesanan!', 'error');
+    return;
+  }
+
+  const btnSubmit = document.getElementById('btn-submit-order-direct');
+  if (btnSubmit) {
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan Pesanan...';
+  }
+
+  let grandTotal = 0;
+  const itemsPayload = cart.map(item => {
+    const subtotal = item.harga * item.qty;
+    grandTotal += subtotal;
+    return {
+      product_id: item.id,
+      seller_id: item.seller_id,
+      nama: item.nama,
+      harga: item.harga,
+      qty: item.qty,
+      subtotal: subtotal,
+      image_url: item.image_url
+    };
+  });
+
+  const primarySellerId = cart[0].seller_id || 1;
+  const primaryPhone = (cart[0].seller_phone || storeSettings.store_wa || '6281234567890').replace(/[^0-9]/g, '');
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        seller_id: primarySellerId,
+        customer_name: customerInfo.split('(')[0].trim(),
+        customer_phone: customerInfo,
+        address: address,
+        payment_method: selectedPaymentMethodVal,
+        total_price: grandTotal,
+        proof_image: proofBase64,
+        items: itemsPayload
+      })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      const orderId = data.order_id;
+      showToast(`Pesanan #MBG-${orderId} berhasil dibuat! Menunggu konfirmasi seller.`);
+      
+      // Bersihkan keranjang
+      cart = [];
+      saveCart();
+      clearProofUpload();
+      closeCartModal();
+
+      // Opsional: Tanya atau beri opsi kirim chat WA dengan Order ID
+      const confirmWa = confirm(`Pesanan #MBG-${orderId} telah tersimpan di sistem! Apakah Anda juga ingin mengirimkan notifikasi rincian pesanan ke WhatsApp Seller?`);
+      if (confirmWa) {
+        const waMsg = `*PESANAN MASUK #MBG-${orderId}*\nHalo Seller, saya telah membuat pesanan melalui web dengan detail:\n- No. Order: #MBG-${orderId}\n- Pemesan: ${customerInfo}\n- Total: ${formatRupiah(grandTotal)}\n- Metode: ${selectedPaymentMethodVal}\n\nMohon cek Panel Seller Anda untuk mengonfirmasi pesanan saya. Terima kasih!`;
+        window.open(`https://wa.me/${primaryPhone}?text=${encodeURIComponent(waMsg)}`, '_blank');
+      }
+    } else {
+      showToast(data.message || 'Gagal menyimpan pesanan.', 'error');
+    }
+  } catch (err) {
+    console.error('Order submit error:', err);
+    showToast('Terjadi kesalahan koneksi saat membuat pesanan.', 'error');
+  } finally {
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane text-sm text-blue-200"></i> <span>Pesan &amp; Kirim ke Seller</span>';
+    }
+  }
+}
+
+// Modal Proof Viewer
+function openProofViewer(orderId) {
+  const order = cachedOrders.find(o => o.id === orderId);
+  if (!order || !order.proof_image) {
+    showToast('Bukti transfer tidak tersedia!', 'error');
+    return;
+  }
+
+  const modal = document.getElementById('modal-proof-viewer');
+  const img = document.getElementById('proof-viewer-img');
+  const title = document.getElementById('proof-viewer-title');
+  const info = document.getElementById('proof-viewer-info');
+
+  if (img) img.src = order.proof_image;
+  if (title) title.innerText = `Bukti Transfer - Order #MBG-${order.id}`;
+  if (info) info.innerText = `Pembeli: ${order.customer_name} | Total: ${formatRupiah(order.total_price)}`;
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeProofViewer() {
+  const modal = document.getElementById('modal-proof-viewer');
+  if (modal) modal.classList.add('hidden');
+}
+
+// Load & Render Seller Orders
+async function loadSellerOrders() {
+  try {
+    const res = await fetch('/api/seller/orders');
+    const data = await res.json();
+    if (data.success) {
+      cachedOrders = data.orders || [];
+      const pendingCount = cachedOrders.filter(o => o.status === 'pending').length;
+      
+      const kpiOrders = document.getElementById('kpi-orders');
+      if (kpiOrders) kpiOrders.innerText = cachedOrders.length;
+
+      const badgeOrders = document.getElementById('badge-orders-count');
+      if (badgeOrders) {
+        badgeOrders.innerText = pendingCount;
+        badgeOrders.classList.toggle('hidden', pendingCount === 0);
+      }
+
+      filterOrdersTable();
+    }
+  } catch (err) {
+    console.error('Failed to load seller orders:', err);
+  }
+}
+
+function filterOrdersTable() {
+  const filterVal = document.getElementById('filter-order-status')?.value || 'all';
+  let filtered = cachedOrders;
+  if (filterVal !== 'all') {
+    filtered = cachedOrders.filter(o => o.status === filterVal);
+  }
+  renderSellerOrdersTable(filtered);
+}
+
+function renderSellerOrdersTable(orders) {
+  const tbody = document.getElementById('seller-orders-tbody');
+  const emptyState = document.getElementById('orders-empty-state');
+  if (!tbody) return;
+
+  if (!orders || orders.length === 0) {
+    tbody.innerHTML = '';
+    if (emptyState) emptyState.classList.remove('hidden');
+    return;
+  }
+
+  if (emptyState) emptyState.classList.add('hidden');
+
+  tbody.innerHTML = orders.map(o => {
+    let items = [];
+    try {
+      items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
+    } catch (e) {
+      items = [];
+    }
+
+    const itemsSummary = items.map(it => `<div class="font-medium text-slate-800"><span class="font-bold text-[#004B8D]">${it.qty}x</span> ${it.nama}</div>`).join('');
+
+    let statusBadge = '';
+    if (o.status === 'pending') {
+      statusBadge = '<span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-clock"></i> Menunggu Konfirmasi</span>';
+    } else if (o.status === 'confirmed') {
+      statusBadge = '<span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-extrabold text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Dikonfirmasi (Lunas)</span>';
+    } else if (o.status === 'rejected') {
+      statusBadge = '<span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-extrabold text-[11px] inline-flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> Ditolak</span>';
+    } else {
+      statusBadge = '<span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 font-extrabold text-[11px]">${o.status}</span>';
+    }
+
+    const proofBtn = o.proof_image
+      ? `<button type="button" onclick="openProofViewer(${o.id})" class="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs inline-flex items-center gap-1.5 transition cursor-pointer">
+           <i class="fa-solid fa-image text-emerald-600"></i>
+           <span>Lihat Bukti</span>
+         </button>`
+      : `<span class="text-slate-400 text-[11px] italic">Tidak ada struk</span>`;
+
+    const actionButtons = `
+      <div class="flex items-center justify-end gap-1.5">
+        ${o.status === 'pending' ? `
+          <button type="button" onclick="updateOrderStatus(${o.id}, 'confirmed')" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-xs shadow-2xs transition flex items-center gap-1 cursor-pointer" title="Konfirmasi & Proses Pesanan">
+            <i class="fa-solid fa-check"></i> <span>Konfirmasi</span>
+          </button>
+          <button type="button" onclick="updateOrderStatus(${o.id}, 'rejected')" class="px-2.5 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg font-bold text-xs transition flex items-center gap-1 cursor-pointer" title="Tolak Pesanan">
+            <i class="fa-solid fa-xmark"></i> <span>Tolak</span>
+          </button>
+        ` : `
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="updateOrderStatus(${o.id}, 'completed')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md font-bold text-[11px] transition" title="Tandai Selesai">
+              Selesai
+            </button>
+            <button type="button" onclick="updateOrderStatus(${o.id}, 'pending')" class="px-2 py-1 text-slate-400 hover:text-slate-600 rounded-md text-[11px] transition" title="Reset ke Pending">
+              Reset
+            </button>
+          </div>
+        `}
+      </div>
+    `;
+
+    const dateStr = new Date(o.created_at).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    return `
+      <tr class="hover:bg-slate-50/70 transition">
+        <td class="py-3.5 px-3 font-mono font-bold text-[#004B8D]">#MBG-${o.id}</td>
+        <td class="py-3.5 px-3 text-slate-500 text-[11px] whitespace-nowrap">${dateStr}</td>
+        <td class="py-3.5 px-3">
+          <div class="font-bold text-slate-900">${o.customer_name}</div>
+          <div class="text-[11px] text-slate-500 font-mono">${o.customer_phone}</div>
+          ${o.address ? `<div class="text-[10px] text-slate-400 truncate max-w-[180px]">${o.address}</div>` : ''}
+        </td>
+        <td class="py-3.5 px-3 max-w-[220px]">
+          <div class="space-y-0.5">${itemsSummary}</div>
+        </td>
+        <td class="py-3.5 px-3">
+          <div class="font-extrabold text-slate-900 mono">${formatRupiah(o.total_price)}</div>
+          <div class="text-[10px] text-slate-500">${o.payment_method}</div>
+        </td>
+        <td class="py-3.5 px-3 text-center">${proofBtn}</td>
+        <td class="py-3.5 px-3 text-center whitespace-nowrap">${statusBadge}</td>
+        <td class="py-3.5 px-3 text-right">${actionButtons}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function updateOrderStatus(orderId, newStatus) {
+  const confirmMsg = newStatus === 'confirmed'
+    ? 'Apakah Anda yakin ingin MENGONFIRMASI pesanan ini dan menandai pembayaran sudah lunas?'
+    : (newStatus === 'rejected' ? 'Apakah Anda yakin ingin MENOLAK pesanan ini?' : 'Ubah status pesanan?');
+
+  if (!confirm(confirmMsg)) return;
+
+  try {
+    const res = await fetch(`/api/seller/orders/${orderId}/status`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      showToast(data.message || 'Status pesanan berhasil diperbarui!');
+      loadSellerOrders();
+    } else {
+      showToast(data.message || 'Gagal memperbarui status pesanan.', 'error');
+    }
+  } catch (err) {
+    console.error('Update status error:', err);
+    showToast('Terjadi kesalahan jaringan.', 'error');
   }
 }
