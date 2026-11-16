@@ -409,6 +409,33 @@ app.get('/api/seller/orders', async (req, res) => {
   }
 });
 
+
+// 5.6 Buyer Order History (Melihat Pesanan Milik Akun Pembeli)
+app.get('/api/buyer/orders', async (req, res) => {
+  try {
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Silakan login terlebih dahulu!' });
+    }
+
+    // Ambil order berdasarkan user.id ATAU no telepon / nama pembeli jika guest terhubung
+    const [orders] = await db.query(`
+      SELECT o.id, o.seller_id, o.buyer_id, o.customer_name, o.customer_phone, o.address,
+             o.payment_method, o.total_price, o.proof_image, o.status, o.items, o.created_at, o.updated_at,
+             u.store_name, u.name as seller_name, u.phone as seller_phone
+      FROM orders o
+      LEFT JOIN users u ON o.seller_id = u.id
+      WHERE o.buyer_id = ? OR o.customer_phone = ?
+      ORDER BY o.id DESC
+    `, [user.id, user.phone || '']);
+
+    res.json({ success: true, orders });
+  } catch (err) {
+    console.error('Fetch buyer orders error:', err);
+    res.status(500).json({ success: false, message: 'Gagal mengambil riwayat pesanan pembeli.' });
+  }
+});
+
 app.patch('/api/seller/orders/:id/status', async (req, res) => {
   try {
     const user = await getAuthUser(req);

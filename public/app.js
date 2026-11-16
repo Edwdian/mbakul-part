@@ -117,8 +117,16 @@ function updateAuthUI() {
       `;
     }
 
+    const btnPesananSaya = `
+      <button onclick="openBuyerOrdersModal()" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition flex items-center gap-1.5 font-bold text-xs border border-white/10 cursor-pointer" title="Riwayat Pesanan Saya">
+        <i class="fa-solid fa-receipt text-xs text-amber-300"></i>
+        <span class="hidden sm:inline">Pesanan Saya</span>
+      </button>
+    `;
+
     navArea.innerHTML = `
       ${btnDashboard}
+      ${btnPesananSaya}
       <button onclick="openProfileModal()" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold transition flex items-center gap-1.5 text-xs border border-white/10 cursor-pointer" title="Lihat & Edit Profil">
         <i class="fa-solid fa-circle-user text-sm text-blue-200"></i>
         <span class="hidden md:inline">${currentUser.name.split(' ')[0]}</span>
