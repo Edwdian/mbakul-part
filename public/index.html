@@ -130,18 +130,18 @@
     <div class="bg-gradient-to-r from-[#004B8D] to-[#002D5A] text-white border-b-2 border-[#E60012]">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-          <button onclick="document.getElementById('search-input')?.focus()"
-            class="flex items-center gap-2 text-white/95 hover:text-white text-xs sm:text-sm font-semibold py-1.5 px-3 rounded-lg hover:bg-white/10 transition">
+          <button onclick="focusSearchInput()"
+            class="flex items-center gap-2 text-white/95 hover:text-white text-xs sm:text-sm font-semibold py-1.5 px-3 rounded-lg hover:bg-white/10 transition cursor-pointer">
             <i class="fa-solid fa-magnifying-glass text-sm"></i>
             <span>Cari Suku Cadang</span>
           </button>
-          <span class="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-blue-200/80 font-medium">
-            <span>Beranda</span>
-            <i class="fa-solid fa-chevron-right text-[9px]"></i>
-            <span>Otomotif</span>
-            <i class="fa-solid fa-chevron-right text-[9px]"></i>
-            <span class="text-white font-bold">Part Motor MBG</span>
-          </span>
+          <div class="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-blue-200/80 font-medium select-none">
+            <button type="button" onclick="resetFilters(); navigateTo('catalog')" class="hover:text-white transition cursor-pointer">Beranda</button>
+            <i class="fa-solid fa-chevron-right text-[9px] text-blue-300/60"></i>
+            <button type="button" onclick="setCategory('Semua'); navigateTo('catalog')" class="hover:text-white transition cursor-pointer">Otomotif</button>
+            <i class="fa-solid fa-chevron-right text-[9px] text-blue-300/60"></i>
+            <button type="button" onclick="navigateTo('catalog')" class="text-white font-bold hover:underline transition cursor-pointer">Part Motor MBG</button>
+          </div>
         </div>
 
         <nav class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-bold">

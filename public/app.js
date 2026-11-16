@@ -347,6 +347,17 @@ function checkResetBtn() {
   document.getElementById('btn-reset-filters').classList.toggle('hidden', !hasFilter);
 }
 
+function focusSearchInput() {
+  navigateTo('catalog');
+  setTimeout(() => {
+    const input = document.getElementById('search-input');
+    if (input) {
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+}
+
 // Navigasi SPA
 function navigateTo(view) {
   if (view === 'dashboard') {
