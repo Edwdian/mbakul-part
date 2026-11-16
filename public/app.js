@@ -941,6 +941,29 @@ function renderCartModal() {
   totalPriceEl.innerText = formatRupiah(grandTotal);
 }
 
+function handleProofFileUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    const base64 = evt.target.result;
+    document.getElementById('proof-base64').value = base64;
+    document.getElementById('proof-preview-img').src = base64;
+    document.getElementById('proof-preview-container').classList.remove('hidden');
+    document.getElementById('proof-label-text').innerText = 'Ganti Foto Struk Transfer';
+    showToast('Foto struk transfer berhasil diunggah!');
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearProofUpload() {
+  document.getElementById('proof-base64').value = '';
+  document.getElementById('proof-file-input').value = '';
+  document.getElementById('proof-preview-container').classList.add('hidden');
+  document.getElementById('proof-label-text').innerText = 'Pilih Foto Struk / Screenshot Bukti Transfer';
+}
+
 function checkoutViaWhatsApp() {
   if (cart.length === 0) {
     showToast('Keranjang Anda masih kosong!', 'error');
@@ -949,6 +972,7 @@ function checkoutViaWhatsApp() {
 
   const customerInfo = document.getElementById('order-customer-info')?.value.trim();
   const address = document.getElementById('order-address')?.value.trim();
+  const hasProof = Boolean(document.getElementById('proof-base64')?.value);
 
   if (!customerInfo) {
     showToast('Nama Pemesan & No. HP wajib diisi!', 'error');
@@ -978,12 +1002,13 @@ Halo *${sellerTitle}*, saya ingin memesan part motor berikut:
 ${itemsListText}
 *TOTAL PEMBAYARAN:* ${formatRupiah(grandTotal)}
 *METODE PEMBAYARAN:* ${selectedPaymentMethodVal}
+*STATUS BUKTI TRANSFER:* ${hasProof ? '✅ Sudah Dilampirkan (Foto struk dikirim menyusul di chat ini)' : 'Menunggu nomor rekening / instruksi pembayaran'}
 
 *DATA PEMESAN:*
 - Nama & No HP: ${customerInfo}
 - Alamat / Catatan: ${address || '-'}
 
-Mohon konfirmasi ketersediaan fisik barang dan nomor rekening / barcode QRIS / petunjuk pengiriman COD. Terima kasih!`;
+Mohon konfirmasi pesanan dan proses pengiriman barang. Terima kasih!`;
 
   const waUrl = `https://wa.me/${primaryPhone}?text=${encodeURIComponent(waMessage)}`;
   window.open(waUrl, '_blank');
