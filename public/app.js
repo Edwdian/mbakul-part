@@ -97,19 +97,19 @@ function updateAuthUI() {
     let roleBadge = '';
     let btnDashboard = '';
     if (currentUser.role === 'admin') {
-      roleBadge = '<span class="px-1.5 py-0.5 rounded-full bg-blue-600 text-[9px] font-extrabold text-white uppercase shadow-xs">Admin</span>';
+      roleBadge = '<span class="px-2 py-0.5 rounded-full bg-blue-500 text-[9px] font-black text-white uppercase tracking-wider">Admin</span>';
       btnDashboard = `
-        <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 rounded-lg text-white hover:bg-white/10 transition flex items-center gap-1.5 font-bold text-xs sm:text-sm">
-          <i class="fa-solid fa-gauge-high text-xs"></i>
+        <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition flex items-center gap-1.5 font-bold text-xs border border-white/10 cursor-pointer">
+          <i class="fa-solid fa-gauge-high text-xs text-blue-200"></i>
           <span class="hidden sm:inline">Panel Admin</span>
           ${roleBadge}
         </button>
       `;
     } else if (currentUser.role === 'seller') {
-      roleBadge = '<span class="px-1.5 py-0.5 rounded-full bg-emerald-600 text-[9px] font-extrabold text-white uppercase shadow-xs">Seller</span>';
+      roleBadge = '<span class="px-2 py-0.5 rounded-full bg-emerald-500 text-[9px] font-black text-white uppercase tracking-wider">Seller</span>';
       btnDashboard = `
-        <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 rounded-lg text-white hover:bg-white/10 transition flex items-center gap-1.5 font-bold text-xs sm:text-sm">
-          <i class="fa-solid fa-store text-xs"></i>
+        <button onclick="navigateTo('dashboard')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white transition flex items-center gap-1.5 font-bold text-xs border border-white/10 cursor-pointer">
+          <i class="fa-solid fa-store text-xs text-emerald-300"></i>
           <span class="hidden sm:inline">Kelola Toko</span>
           ${roleBadge}
         </button>
@@ -118,18 +118,18 @@ function updateAuthUI() {
 
     navArea.innerHTML = `
       ${btnDashboard}
-      <button onclick="openProfileModal()" class="px-2.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold transition flex items-center gap-1.5 text-xs sm:text-sm" title="Lihat & Edit Profil">
+      <button onclick="openProfileModal()" class="px-2.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 text-white font-bold transition flex items-center gap-1.5 text-xs border border-white/10 cursor-pointer" title="Lihat & Edit Profil">
         <i class="fa-solid fa-circle-user text-sm text-blue-200"></i>
         <span class="hidden md:inline">${currentUser.name.split(' ')[0]}</span>
       </button>
-      <button onclick="openLogoutModal()" class="px-2.5 py-1.5 rounded-lg bg-rose-500/20 hover:bg-rose-500/40 text-rose-200 hover:text-white font-bold transition flex items-center gap-1 text-xs" title="Keluar">
-        <i class="fa-solid fa-power-off text-sm"></i>
+      <button onclick="openLogoutModal()" class="px-2.5 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/40 active:scale-95 text-rose-200 hover:text-white font-bold transition flex items-center gap-1 text-xs border border-rose-500/30 cursor-pointer" title="Keluar">
+        <i class="fa-solid fa-power-off text-xs"></i>
         <span class="hidden lg:inline">Keluar</span>
       </button>
     `;
   } else {
     navArea.innerHTML = `
-      <button onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition flex items-center gap-1.5 font-bold text-xs sm:text-sm">
+      <button onclick="openLoginModal()" class="px-3.5 py-1.5 rounded-xl bg-white text-[#004B8D] hover:bg-blue-50 active:scale-95 transition flex items-center gap-1.5 font-bold text-xs sm:text-sm shadow-xs cursor-pointer">
         <i class="fa-solid fa-arrow-right-to-bracket text-xs"></i>
         <span>Masuk / Daftar</span>
       </button>
@@ -463,8 +463,8 @@ function navigateTo(view) {
     if (catalogSec) catalogSec.classList.add('hidden');
     if (homeSec) homeSec.classList.remove('hidden');
 
-    if (btnHome) btnHome.className = 'px-3.5 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold';
-    if (btnCatalog) btnCatalog.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition font-bold';
+    if (btnHome) btnHome.className = 'px-3 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold text-xs sm:text-sm cursor-pointer';
+    if (btnCatalog) btnCatalog.className = 'px-3 py-1.5 rounded-lg text-white hover:text-white hover:bg-white/10 transition font-bold text-xs sm:text-sm cursor-pointer';
     renderHomeFeaturedProducts();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
@@ -480,8 +480,8 @@ function navigateTo(view) {
     if (dashSec) dashSec.classList.add('hidden');
     if (catalogSec) catalogSec.classList.remove('hidden');
 
-    if (btnHome) btnHome.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition font-bold';
-    if (btnCatalog) btnCatalog.className = 'px-3.5 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold';
+    if (btnHome) btnHome.className = 'px-3 py-1.5 rounded-lg text-white hover:text-white hover:bg-white/10 transition font-bold text-xs sm:text-sm cursor-pointer';
+    if (btnCatalog) btnCatalog.className = 'px-3 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold text-xs sm:text-sm cursor-pointer';
     loadProducts();
   }
 }
