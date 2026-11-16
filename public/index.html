@@ -1080,6 +1080,70 @@
             </label>
           </div>
 
+          <!-- Transfer Bank & E-Wallet Preview Box -->
+          <div id="tf-preview-box" class="p-4 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-3 animate-in fade-in duration-200">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#004B8D] text-white font-extrabold text-[10px] uppercase tracking-wide">
+                <i class="fa-solid fa-building-columns"></i> Rekening Resmi MBG &amp; E-Wallet
+              </span>
+              <span class="text-[10px] font-bold text-slate-500">Pilih Salah Satu</span>
+            </div>
+
+            <!-- List Bank -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <!-- BCA -->
+              <div class="p-2.5 bg-white rounded-xl border border-blue-200/80 flex items-center justify-between shadow-2xs">
+                <div>
+                  <div class="font-black text-[#004B8D] text-xs">BANK BCA</div>
+                  <div class="font-mono font-bold text-slate-800 text-sm mt-0.5">8290-1928-44</div>
+                  <div class="text-[10px] text-slate-400">a.n. Mbakul Bagian Gaul</div>
+                </div>
+                <button type="button" onclick="copyToClipboard('8290192844', 'No. Rekening BCA')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-[#004B8D] rounded-lg text-[10px] font-bold transition cursor-pointer" title="Salin">
+                  Salin
+                </button>
+              </div>
+
+              <!-- Mandiri -->
+              <div class="p-2.5 bg-white rounded-xl border border-blue-200/80 flex items-center justify-between shadow-2xs">
+                <div>
+                  <div class="font-black text-[#004B8D] text-xs">BANK MANDIRI</div>
+                  <div class="font-mono font-bold text-slate-800 text-sm mt-0.5">137-00-1928492-1</div>
+                  <div class="text-[10px] text-slate-400">a.n. Mbakul Bagian Gaul</div>
+                </div>
+                <button type="button" onclick="copyToClipboard('1370019284921', 'No. Rekening Mandiri')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-[#004B8D] rounded-lg text-[10px] font-bold transition cursor-pointer" title="Salin">
+                  Salin
+                </button>
+              </div>
+
+              <!-- BRI -->
+              <div class="p-2.5 bg-white rounded-xl border border-blue-200/80 flex items-center justify-between shadow-2xs">
+                <div>
+                  <div class="font-black text-[#004B8D] text-xs">BANK BRI</div>
+                  <div class="font-mono font-bold text-slate-800 text-sm mt-0.5">0129-01-082918-50-3</div>
+                  <div class="text-[10px] text-slate-400">a.n. Mbakul Bagian Gaul</div>
+                </div>
+                <button type="button" onclick="copyToClipboard('012901082918503', 'No. Rekening BRI')" class="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-[#004B8D] rounded-lg text-[10px] font-bold transition cursor-pointer" title="Salin">
+                  Salin
+                </button>
+              </div>
+
+              <!-- Dana / GoPay / OVO -->
+              <div class="p-2.5 bg-white rounded-xl border border-emerald-200 flex items-center justify-between shadow-2xs">
+                <div>
+                  <div class="font-black text-emerald-700 text-xs">DANA / GOPAY / OVO</div>
+                  <div class="font-mono font-bold text-slate-800 text-sm mt-0.5">0812-3456-7890</div>
+                  <div class="text-[10px] text-slate-400">a.n. Mbakul Bagian Gaul</div>
+                </div>
+                <button type="button" onclick="copyToClipboard('081234567890', 'No. E-Wallet')" class="px-2 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-[10px] font-bold transition cursor-pointer" title="Salin">
+                  Salin
+                </button>
+              </div>
+            </div>
+            <p class="text-[11px] text-slate-500 font-medium">
+              💡 Simpan atau salin nomor rekening/e-wallet di atas. Setelah transfer, kirimkan bukti foto struk transfer saat WhatsApp terbuka.
+            </p>
+          </div>
+
           <!-- QRIS Preview Card -->
           <div id="qris-preview-box" class="hidden p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left animate-in fade-in duration-200">
             <div class="bg-white p-2 rounded-xl border border-emerald-300 shadow-sm shrink-0">

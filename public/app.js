@@ -832,6 +832,14 @@ function removeCartItem(id) {
   showToast('Item dihapus dari keranjang.');
 }
 
+function copyToClipboard(text, label) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`${label} (${text}) berhasil disalin!`);
+  }).catch(() => {
+    showToast(`Gagal menyalin ${label}`, 'error');
+  });
+}
+
 function selectPaymentMethod(methodKey) {
   ['tf', 'qris', 'cod'].forEach(m => {
     const el = document.getElementById(`opt-pay-${m}`);
@@ -844,16 +852,20 @@ function selectPaymentMethod(methodKey) {
     }
   });
 
+  const tfBox = document.getElementById('tf-preview-box');
   const qrisBox = document.getElementById('qris-preview-box');
 
   if (methodKey === 'tf') {
-    selectedPaymentMethodVal = 'Transfer Bank (BCA / Mandiri / BRI)';
+    selectedPaymentMethodVal = 'Transfer Bank (BCA / Mandiri / BRI / E-Wallet)';
+    if (tfBox) tfBox.classList.remove('hidden');
     if (qrisBox) qrisBox.classList.add('hidden');
   } else if (methodKey === 'qris') {
     selectedPaymentMethodVal = 'QRIS Semua E-Wallet (GoPay, OVO, Dana, ShopeePay)';
+    if (tfBox) tfBox.classList.add('hidden');
     if (qrisBox) qrisBox.classList.remove('hidden');
   } else if (methodKey === 'cod') {
     selectedPaymentMethodVal = 'COD (Bayar Tunai di Tempat / Cash On Delivery)';
+    if (tfBox) tfBox.classList.add('hidden');
     if (qrisBox) qrisBox.classList.add('hidden');
   }
 }
