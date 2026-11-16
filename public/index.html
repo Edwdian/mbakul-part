@@ -65,7 +65,7 @@
     <div class="bg-white border-b border-slate-200/80">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
         <!-- Logo MBG -->
-        <div onclick="navigateTo('catalog')" class="flex items-center gap-3 cursor-pointer group">
+        <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer group">
           <div
             class="w-11 h-11 sm:w-12 sm:h-12 shrink-0 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
             <!-- Emblem MBG Asli -->
@@ -136,17 +136,21 @@
             <span>Cari Suku Cadang</span>
           </button>
           <div class="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-blue-200/80 font-medium select-none">
-            <button type="button" onclick="resetFilters(); navigateTo('catalog')" class="hover:text-white transition cursor-pointer">Beranda</button>
+            <button type="button" onclick="navigateTo('home')" class="hover:text-white transition cursor-pointer">Beranda</button>
             <i class="fa-solid fa-chevron-right text-[9px] text-blue-300/60"></i>
-            <button type="button" onclick="setCategory('Semua'); navigateTo('catalog')" class="hover:text-white transition cursor-pointer">Otomotif</button>
+            <button type="button" onclick="navigateTo('catalog')" class="hover:text-white transition cursor-pointer">Otomotif</button>
             <i class="fa-solid fa-chevron-right text-[9px] text-blue-300/60"></i>
             <button type="button" onclick="navigateTo('catalog')" class="text-white font-bold hover:underline transition cursor-pointer">Part Motor MBG</button>
           </div>
         </div>
 
         <nav class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-bold">
+          <button onclick="navigateTo('home')" id="btn-nav-home"
+            class="px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition">
+            Beranda
+          </button>
           <button onclick="navigateTo('catalog')" id="btn-nav-catalog"
-            class="px-4 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs hover:bg-blue-50 transition">
+            class="px-3.5 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs hover:bg-blue-50 transition">
             Katalog Produk
           </button>
           <div id="nav-auth-area" class="flex items-center gap-2"></div>
@@ -203,9 +207,124 @@
   </section>
 
   <!-- ======================================================== -->
+  <!-- VIEW 0: BERANDA UTAMA (PORTAL & PILIHAN KATEGORI LENGKAP) -->
+  <!-- ======================================================== -->
+  <main id="view-home" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <!-- Pilihan Kategori Populer Cepat -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-[#002D5A] flex items-center gap-2">
+            <i class="fa-solid fa-shapes text-[#004B8D]"></i> Pilihan Kategori Sparepart Motor
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">Temukan onderdil bekas copotan original sesuai kelompok komponen</p>
+        </div>
+        <button onclick="navigateTo('catalog')" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-[#004B8D] hover:underline">
+          <span>Lihat Semua Part</span>
+          <i class="fa-solid fa-arrow-right text-[10px]"></i>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <!-- Mesin -->
+        <div onclick="selectHomeCategory('Mesin & Transmisi')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-blue-100/70 text-[#004B8D] flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-gear"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Mesin &amp; Transmisi</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Karbu, Blok, Piston</div>
+        </div>
+
+        <!-- Kaki-kaki -->
+        <div onclick="selectHomeCategory('Kaki-kaki & Velg')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-arrows-up-down"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Kaki-kaki &amp; Velg</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Shock, Velg, Arm</div>
+        </div>
+
+        <!-- Pengereman -->
+        <div onclick="selectHomeCategory('Pengereman')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-rose-100/70 text-rose-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-circle-dot"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Pengereman</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Master, Kaliper, Piringan</div>
+        </div>
+
+        <!-- Kelistrikan -->
+        <div onclick="selectHomeCategory('Kelistrikan')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100/70 text-amber-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Kelistrikan</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">CDI, Kiprok, Spul</div>
+        </div>
+
+        <!-- Body & Aksesoris -->
+        <div onclick="selectHomeCategory('Body & Aksesoris')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-purple-100/70 text-purple-600 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-shield"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Body &amp; Aksesoris</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Tangki, Reflektor, Cover</div>
+        </div>
+
+        <!-- Knalpot -->
+        <div onclick="selectHomeCategory('Knalpot')" class="p-4 bg-white hover:bg-blue-50/60 border border-slate-200 hover:border-[#004B8D] rounded-2xl cursor-pointer transition-all duration-200 card-hover text-center group">
+          <div class="w-12 h-12 mx-auto rounded-2xl bg-cyan-100/70 text-cyan-700 flex items-center justify-center text-xl mb-3 group-hover:scale-110 transition-transform">
+            <i class="fa-solid fa-fire"></i>
+          </div>
+          <div class="font-extrabold text-xs sm:text-sm text-slate-800">Knalpot</div>
+          <div class="text-[10px] text-slate-400 mt-0.5">Silencer, Leher Knalpot</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pilihan Produk Unggulan & Terpopuler -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-[#002D5A] flex items-center gap-2">
+            <i class="fa-solid fa-star text-[#E60012]"></i> Pilihan Produk Pilihan (Bintang Unggulan)
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">Suku cadang pilihan paling dicari dan sudah diuji fungsi oleh seller</p>
+        </div>
+        <button onclick="navigateTo('catalog'); togglePilihanFilter();" class="text-xs font-bold text-[#E60012] hover:underline flex items-center gap-1">
+          <span>Lihat Produk Unggulan</span>
+          <i class="fa-solid fa-chevron-right text-[9px]"></i>
+        </button>
+      </div>
+      <div id="home-featured-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+    </section>
+
+    <!-- Banner Pilihan Seller / Reseller Mitra Terverifikasi -->
+    <section class="bg-gradient-to-r from-slate-900 to-[#002D5A] rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl">
+      <div class="max-w-2xl relative z-10 space-y-3">
+        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black uppercase tracking-wider">
+          Mitra Lapak Terverifikasi
+        </span>
+        <h3 class="text-2xl sm:text-3xl font-black">Beli Langsung ke Penjual Tanpa Biaya Admin</h3>
+        <p class="text-xs sm:text-sm text-blue-100/80 leading-relaxed font-medium">
+          Setiap sparepart motor terhubung langsung ke WhatsApp pemilik lapak. Tanya detail fisik, video cek langsam mesin, dan negosiasi langsung tanpa perantara.
+        </p>
+        <div class="pt-2 flex flex-wrap gap-3">
+          <button onclick="navigateTo('catalog')" class="px-5 py-2.5 rounded-xl bg-[#004B8D] hover:bg-blue-600 text-white font-extrabold text-xs sm:text-sm transition shadow-lg">
+            Jelajahi Semua Produk
+          </button>
+          <button onclick="openLoginModal(); switchAuthMode('register')" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-extrabold text-xs sm:text-sm transition">
+            Daftar Sebagai Seller
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ======================================================== -->
   <!-- VIEW 1: KATALOG PEMBELI                                  -->
   <!-- ======================================================== -->
-  <main id="view-catalog" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+  <main id="view-catalog" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
     <!-- Tab Kategori Horizontal Modern -->
     <div class="space-y-4">

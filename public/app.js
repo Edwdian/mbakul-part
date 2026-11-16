@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCategoryDropdown();
   await loadInitialData();
   await loadProducts();
+  renderHomeFeaturedProducts();
 });
 
 // Toast Notifikasi Halus & Menarik
@@ -358,15 +359,74 @@ function focusSearchInput() {
   }, 100);
 }
 
-// Navigasi SPA
+// Navigasi SPA (home, catalog, dashboard)
+function selectHomeCategory(category) {
+  currentKategori = category;
+  document.getElementById('filter-category-select').value = category;
+  renderCategoryTabs();
+  checkResetBtn();
+  navigateTo('catalog');
+}
+
+function renderHomeFeaturedProducts() {
+  const container = document.getElementById('home-featured-grid');
+  if (!container) return;
+
+  const featured = cachedProducts.filter(p => p.unggulan == 1).slice(0, 4);
+  const displayItems = featured.length > 0 ? featured : cachedProducts.slice(0, 4);
+
+  container.innerHTML = displayItems.map(item => {
+    const waPhone = (item.seller_phone || storeSettings.store_wa || '6281234567890').replace(/[^0-9]/g, '');
+    const waText = `Halo ${item.seller_name || 'Seller'}, saya berminat dengan produk *${item.nama}* (Harga: ${formatRupiah(item.harga)}) di MBG. Apakah unit masih tersedia?`;
+    const imgUrl = item.image_url ? item.image_url : getSvgPlaceholder(item.kategori, item.nama);
+
+    return `
+      <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs card-hover flex flex-col justify-between group">
+        <div class="cursor-pointer" onclick='openDetailModal(${JSON.stringify(item)})'>
+          <div class="h-44 bg-slate-50 border-b border-slate-100 flex items-center justify-center p-4 relative overflow-hidden">
+            <img src="${imgUrl}" alt="${item.nama}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
+            <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-red-600 text-white shadow-xs">★ Pilihan</span>
+          </div>
+          <div class="p-4 space-y-2">
+            <div class="text-[10px] font-extrabold uppercase text-[#004B8D] tracking-wide">${item.kategori}</div>
+            <h4 class="font-bold text-xs sm:text-sm text-slate-800 line-clamp-2 leading-tight">${item.nama}</h4>
+            <div class="text-sm sm:text-base font-black text-[#004B8D] mono">${formatRupiah(item.harga)}</div>
+            <div class="text-[11px] text-slate-500 flex items-center gap-1">
+              <i class="fa-solid fa-store text-emerald-600"></i>
+              <span class="truncate">${item.store_name || item.seller_name}</span>
+            </div>
+          </div>
+        </div>
+        <div class="p-4 pt-0">
+          <a href="https://wa.me/${waPhone}?text=${encodeURIComponent(waText)}" target="_blank"
+            class="w-full py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition shadow-xs">
+            <i class="fa-brands fa-whatsapp text-sm"></i>
+            <span>Tanya WA Seller</span>
+          </a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 function navigateTo(view) {
+  const homeSec = document.getElementById('view-home');
+  const catalogSec = document.getElementById('view-catalog');
+  const dashSec = document.getElementById('view-dashboard');
+  const btnHome = document.getElementById('btn-nav-home');
+  const btnCatalog = document.getElementById('btn-nav-catalog');
+
   if (view === 'dashboard') {
     if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'seller')) {
       openLoginModal();
       return;
     }
-    document.getElementById('view-catalog').classList.add('hidden');
-    document.getElementById('view-dashboard').classList.remove('hidden');
+    if (homeSec) homeSec.classList.add('hidden');
+    if (catalogSec) catalogSec.classList.add('hidden');
+    if (dashSec) dashSec.classList.remove('hidden');
+
+    if (btnHome) btnHome.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition';
+    if (btnCatalog) btnCatalog.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition';
 
     const isAdmin = currentUser.role === 'admin';
     document.getElementById('dashboard-main-title').innerHTML = isAdmin 
@@ -382,9 +442,23 @@ function navigateTo(view) {
 
     switchDashTab('products');
     loadDashboardData();
+  } else if (view === 'home') {
+    if (dashSec) dashSec.classList.add('hidden');
+    if (catalogSec) catalogSec.classList.add('hidden');
+    if (homeSec) homeSec.classList.remove('hidden');
+
+    if (btnHome) btnHome.className = 'px-3.5 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold';
+    if (btnCatalog) btnCatalog.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition font-bold';
+    renderHomeFeaturedProducts();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
-    document.getElementById('view-dashboard').classList.add('hidden');
-    document.getElementById('view-catalog').classList.remove('hidden');
+    // view === 'catalog'
+    if (homeSec) homeSec.classList.add('hidden');
+    if (dashSec) dashSec.classList.add('hidden');
+    if (catalogSec) catalogSec.classList.remove('hidden');
+
+    if (btnHome) btnHome.className = 'px-3.5 py-1.5 rounded-lg text-white hover:bg-white/10 transition font-bold';
+    if (btnCatalog) btnCatalog.className = 'px-3.5 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs font-bold';
     loadProducts();
   }
 }
