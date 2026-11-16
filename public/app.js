@@ -1057,18 +1057,43 @@ function clearProductImage() {
 function renderDashProductsTable(products) {
   const tbody = document.getElementById('dash-product-tbody');
   document.getElementById('dash-product-count').innerText = `${products.length} Barang`;
+
+  if (products.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="py-10 text-center text-slate-400">
+          <i class="fa-solid fa-box-open text-3xl mb-2 block text-slate-300"></i>
+          <span>Belum ada barang di inventaris lapak ini.</span>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
   tbody.innerHTML = products.map(p => `
-    <tr class="hover:bg-slate-50 transition">
-      <td class="py-3 px-4">
-        <div class="font-bold text-[#002D5A]">${p.nama} ${p.unggulan ? '<span class="text-[#E60012] font-black text-[10px] ml-1">★ Pilihan!</span>' : ''}</div>
-        <div class="text-[11px] text-zinc-500">${p.kondisi} ${currentUser.role === 'admin' ? `&bull; <strong class="text-emerald-700">${p.store_name || p.seller_name}</strong>` : ''}</div>
+    <tr class="hover:bg-slate-50/80 transition duration-150">
+      <td class="py-4 px-5">
+        <div class="font-extrabold text-[#002D5A] text-xs sm:text-sm flex items-center gap-1.5 flex-wrap">
+          <span>${p.nama}</span>
+          ${p.unggulan ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-black bg-rose-50 text-rose-600 border border-rose-200 uppercase tracking-wide"><i class="fa-solid fa-star text-[8px]"></i> Pilihan</span>' : ''}
+        </div>
+        <div class="text-[11px] text-zinc-500 mt-1 flex items-center gap-1.5 flex-wrap">
+          <span class="font-medium px-2 py-0.5 rounded-md bg-slate-100">${p.kondisi}</span>
+          ${currentUser.role === 'admin' ? `<span class="text-slate-400">&bull;</span> <strong class="text-emerald-700 flex items-center gap-1"><i class="fa-solid fa-store text-[9px]"></i> ${p.store_name || p.seller_name}</strong>` : ''}
+        </div>
       </td>
-      <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-zinc-700">${p.kategori}</span></td>
-      <td class="py-3 px-4 font-black text-[#004B8D] mono">${formatRupiah(p.harga)}</td>
-      <td class="py-3 px-4 text-center font-bold ${p.stok > 0 ? 'text-emerald-600' : 'text-rose-600'}">${p.stok > 0 ? p.stok + ' Unit' : 'Habis'}</td>
-      <td class="py-3 px-4 text-center">
-        <button onclick='editProduct(${JSON.stringify(p)})' class="px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg font-bold mr-1">Edit</button>
-        <button onclick="deleteProduct(${p.id})" class="px-2.5 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold">Hapus</button>
+      <td class="py-4 px-5"><span class="px-2.5 py-1 rounded-lg text-[10px] font-black bg-blue-50 text-[#004B8D] border border-blue-200/60">${p.kategori}</span></td>
+      <td class="py-4 px-5 font-black text-[#004B8D] mono text-xs sm:text-sm">${formatRupiah(p.harga)}</td>
+      <td class="py-4 px-5 text-center">
+        <span class="inline-block px-3 py-1 rounded-full text-xs font-black ${p.stok > 0 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-600 border border-rose-200'}">
+          ${p.stok > 0 ? p.stok + ' Unit' : 'Habis'}
+        </span>
+      </td>
+      <td class="py-4 px-5 text-center">
+        <div class="inline-flex items-center gap-1.5">
+          <button onclick='editProduct(${JSON.stringify(p)})' class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-[#004B8D] hover:text-white rounded-xl font-bold transition text-xs shadow-2xs">Edit</button>
+          <button onclick="deleteProduct(${p.id})" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl font-bold transition text-xs shadow-2xs">Hapus</button>
+        </div>
       </td>
     </tr>
   `).join('');
@@ -1202,30 +1227,32 @@ function renderAdminUsersTable(usersData) {
   tbody.innerHTML = filtered.map(u => {
     let roleBadge = '';
     if (u.role === 'admin') {
-      roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-blue-100 text-[#004B8D] uppercase">Admin Pusat</span>';
+      roleBadge = '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-blue-50 text-[#004B8D] border border-blue-200 uppercase tracking-wider shadow-2xs"><i class="fa-solid fa-user-shield text-[9px]"></i> Admin Pusat</span>';
     } else if (u.role === 'seller') {
-      roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-800 uppercase flex items-center gap-1 w-fit"><i class="fa-solid fa-store text-[9px]"></i> Seller Lapak</span>';
+      roleBadge = '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 uppercase tracking-wider shadow-2xs"><i class="fa-solid fa-store text-[9px] text-emerald-600"></i> Seller Lapak</span>';
     } else {
-      roleBadge = '<span class="px-2 py-0.5 rounded text-[10px] font-extrabold bg-amber-100 text-amber-800 uppercase">Pembeli</span>';
+      roleBadge = '<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200 uppercase tracking-wider shadow-2xs"><i class="fa-solid fa-user text-[9px] text-amber-600"></i> Pembeli</span>';
     }
 
     return `
-      <tr class="hover:bg-slate-50 transition">
-        <td class="py-3 px-4">
-          <div class="font-bold text-[#002D5A]">${u.name}</div>
-          <div class="text-[11px] text-slate-500">${u.store_name ? '<i class="fa-solid fa-store text-emerald-600 mr-1"></i><span class="font-bold text-emerald-800">' + u.store_name + '</span>' : '-'}</div>
+      <tr class="hover:bg-slate-50/80 transition duration-150">
+        <td class="py-4 px-5">
+          <div class="font-extrabold text-[#002D5A] text-xs sm:text-sm">${u.name}</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">${u.store_name ? '<i class="fa-solid fa-store text-emerald-600 mr-1"></i><span class="font-bold text-emerald-800">' + u.store_name + '</span>' : '<span class="text-slate-400 font-normal">Belum ada lapak</span>'}</div>
         </td>
-        <td class="py-3 px-4 font-mono text-zinc-600">${u.email}</td>
-        <td class="py-3 px-4">${roleBadge}</td>
-        <td class="py-3 px-4 font-mono text-zinc-600">
-          ${u.phone ? `<a href="https://wa.me/${u.phone.replace(/[^0-9]/g, '')}" target="_blank" class="hover:text-emerald-600 hover:underline"><i class="fa-brands fa-whatsapp text-emerald-500 mr-1"></i>${u.phone}</a>` : '-'}
+        <td class="py-4 px-5 font-mono text-zinc-600 text-xs">${u.email}</td>
+        <td class="py-4 px-5">${roleBadge}</td>
+        <td class="py-4 px-5 font-mono text-zinc-600 text-xs">
+          ${u.phone ? `<a href="https://wa.me/${u.phone.replace(/[^0-9]/g, '')}" target="_blank" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/60 font-bold transition"><i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i><span>${u.phone}</span></a>` : '<span class="text-slate-300">-</span>'}
         </td>
-        <td class="py-3 px-4 text-center font-bold text-slate-700">
-          <span class="px-2 py-0.5 rounded-full ${u.total_products > 0 ? 'bg-blue-50 text-[#004B8D]' : 'bg-slate-100 text-slate-400'}">${u.total_products || 0} Part</span>
+        <td class="py-4 px-5 text-center">
+          <span class="inline-block px-3 py-1 rounded-full font-black text-xs ${u.total_products > 0 ? 'bg-blue-50 text-[#004B8D] border border-blue-200' : 'bg-slate-100 text-slate-400'}">${u.total_products || 0} Part</span>
         </td>
-        <td class="py-3 px-4 text-center">
-          <button onclick='editUser(${JSON.stringify(u)})' class="px-2.5 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg font-bold mr-1">Edit</button>
-          ${currentUser && currentUser.id !== u.id ? `<button onclick="deleteUser(${u.id})" class="px-2.5 py-1 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg font-bold">Hapus</button>` : ''}
+        <td class="py-4 px-5 text-center">
+          <div class="inline-flex items-center gap-1.5">
+            <button onclick='editUser(${JSON.stringify(u)})' class="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-[#004B8D] hover:text-white rounded-xl font-bold transition text-xs shadow-2xs">Edit</button>
+            ${currentUser && currentUser.id !== u.id ? `<button onclick="deleteUser(${u.id})" class="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl font-bold transition text-xs shadow-2xs">Hapus</button>` : ''}
+          </div>
         </td>
       </tr>
     `;
