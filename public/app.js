@@ -844,12 +844,17 @@ function selectPaymentMethod(methodKey) {
     }
   });
 
+  const qrisBox = document.getElementById('qris-preview-box');
+
   if (methodKey === 'tf') {
     selectedPaymentMethodVal = 'Transfer Bank (BCA / Mandiri / BRI)';
+    if (qrisBox) qrisBox.classList.add('hidden');
   } else if (methodKey === 'qris') {
     selectedPaymentMethodVal = 'QRIS Semua E-Wallet (GoPay, OVO, Dana, ShopeePay)';
+    if (qrisBox) qrisBox.classList.remove('hidden');
   } else if (methodKey === 'cod') {
     selectedPaymentMethodVal = 'COD (Bayar Tunai di Tempat / Cash On Delivery)';
+    if (qrisBox) qrisBox.classList.add('hidden');
   }
 }
 
