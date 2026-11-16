@@ -456,17 +456,22 @@
       </div>
     </div>
 
-    <!-- Tab Navigasi Dashboard Modern -->
-    <div class="flex items-center gap-2 border-b border-slate-200 text-xs sm:text-sm font-bold overflow-x-auto pb-0.5">
+    <!-- Tab Navigasi Dashboard Modern Pill Style (Proporsional & Elegan) -->
+    <div class="bg-slate-100/80 p-1.5 rounded-2xl border border-slate-200/90 inline-flex flex-wrap items-center gap-1.5 max-w-full">
       <button onclick="switchDashTab('products')" id="dash-tab-products"
-        class="pb-3 px-3 text-[#004B8D] border-b-2 border-[#004B8D] transition cursor-pointer">
-        Kelola Produk Part
+        class="py-2.5 px-4 sm:px-5 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer bg-white text-[#004B8D] shadow-xs">
+        <i class="fa-solid fa-boxes-stacked text-xs"></i>
+        <span>Kelola Produk Part</span>
       </button>
-      <button onclick="switchDashTab('users')" id="dash-tab-users" class="pb-3 px-3 text-slate-500 hover:text-slate-800 transition cursor-pointer">
-        Kelola Pengguna (Admin)
+      <button onclick="switchDashTab('users')" id="dash-tab-users"
+        class="py-2.5 px-4 sm:px-5 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer text-slate-500 hover:text-slate-800 hover:bg-white/60">
+        <i class="fa-solid fa-users-gear text-xs"></i>
+        <span>Kelola Pengguna (Admin)</span>
       </button>
-      <button onclick="switchDashTab('settings')" id="dash-tab-settings" class="pb-3 px-3 text-slate-500 hover:text-slate-800 transition cursor-pointer">
-        CS Pusat Platform
+      <button onclick="switchDashTab('settings')" id="dash-tab-settings"
+        class="py-2.5 px-4 sm:px-5 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer text-slate-500 hover:text-slate-800 hover:bg-white/60">
+        <i class="fa-solid fa-headset text-xs"></i>
+        <span>CS Pusat Platform</span>
       </button>
     </div>
 

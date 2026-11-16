@@ -983,17 +983,23 @@ Mohon konfirmasi ketersediaan fisik barang dan nomor rekening / barcode QRIS / p
   showToast('Pesanan berhasil dibuat dan diarahkan ke WhatsApp Penjual!');
 }
 
-// Dashboard Tabs Switch
+// Dashboard Tabs Switch (Segmented Control Pill Style)
 function switchDashTab(tab) {
-  ['products', 'users', 'settings'].forEach(t => {
-    const sec = document.getElementById(`dash-sec-${t}`);
-    const tabBtn = document.getElementById(`dash-tab-${t}`);
-    if (sec) sec.classList.toggle('hidden', t !== tab);
+  const tabs = [
+    { id: 'products', icon: 'fa-boxes-stacked', label: 'Kelola Produk Part' },
+    { id: 'users', icon: 'fa-users-gear', label: 'Kelola Pengguna (Admin)' },
+    { id: 'settings', icon: 'fa-headset', label: 'CS Pusat Platform' }
+  ];
+
+  tabs.forEach(t => {
+    const sec = document.getElementById(`dash-sec-${t.id}`);
+    const tabBtn = document.getElementById(`dash-tab-${t.id}`);
+    if (sec) sec.classList.toggle('hidden', t.id !== tab);
     if (tabBtn) {
-      if (t === tab) {
-        tabBtn.className = 'pb-3 text-[#004B8D] border-b-2 border-[#004B8D]';
+      if (t.id === tab) {
+        tabBtn.className = 'py-2.5 px-4 sm:px-5 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer bg-white text-[#004B8D] shadow-xs';
       } else {
-        tabBtn.className = 'pb-3 text-zinc-500 hover:text-zinc-800';
+        tabBtn.className = 'py-2.5 px-4 sm:px-5 rounded-xl font-extrabold text-xs sm:text-sm transition-all duration-200 flex items-center gap-2 cursor-pointer text-slate-500 hover:text-slate-800 hover:bg-white/60';
       }
     }
   });
