@@ -1,0 +1,6 @@
+node_modules
+.env
+*.log
+prototype_sparepat.html
+prototipe_galeri_cupang.html
+spec.md

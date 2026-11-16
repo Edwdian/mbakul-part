@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MBG (Mbakul Bagian Gaul) — Katalog & Lapak Sparepart Motor Bekas</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap"
+    rel="stylesheet">
+  <!-- Font Awesome Pro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --text-main: #0f2537;
+      --astra-blue: #004b8d;
+      --astra-navy: #002d5a;
+      --honda-red: #e60012;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Custom Modern Shadow & Glassmorphism */
+    .card-hover {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px -8px rgba(0, 45, 90, 0.12), 0 4px 12px -2px rgba(0, 75, 141, 0.06);
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-pattern {
+      background-color: #002d5a;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-blue-100 selection:text-[#004B8D]">
+
+  <!-- TOP ANNOUNCEMENT BAR ASTRA HONDA STYLE -->
+  <header class="sticky top-0 z-40 shadow-sm">
+    <div class="bg-white border-b border-slate-200/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
+        <!-- Logo MBG -->
+        <div onclick="navigateTo('catalog')" class="flex items-center gap-3 cursor-pointer group">
+          <div
+            class="w-11 h-11 sm:w-12 sm:h-12 shrink-0 flex items-center justify-center transform group-hover:scale-105 transition-transform duration-200">
+            <!-- Emblem MBG Asli -->
+            <svg viewBox="0 0 200 200" class="w-full h-full drop-shadow-sm" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="100" r="95" fill="#cbe5f4" stroke="#5b4d32" stroke-width="3.5" />
+              <circle cx="100" cy="100" r="65" fill="#0d2346" stroke="#8b6b32" stroke-width="4.5" />
+              <defs>
+                <path id="topArcMbg" d="M 24,100 A 76,76 0 1,1 176,100" />
+                <path id="bottomArcMbg" d="M 20,104 A 80,80 0 0,0 180,104" />
+              </defs>
+              <text fill="#0d2346" font-family="'Plus Jakarta Sans', sans-serif" font-size="16.5" font-weight="800"
+                letter-spacing="1.2">
+                <textPath href="#topArcMbg" startOffset="50%" text-anchor="middle">MBAKUL BAGIAN GAUL</textPath>
+              </text>
+              <text fill="#0d2346" font-family="'Plus Jakarta Sans', sans-serif" font-size="15.5" font-weight="800"
+                letter-spacing="1.2">
+                <textPath href="#bottomArcMbg" startOffset="50%" text-anchor="middle">REPUBLIK INDONESIA</textPath>
+              </text>
+              <circle cx="22" cy="100" r="5" fill="#0d2346" />
+              <circle cx="178" cy="100" r="5" fill="#0d2346" />
+              <path d="M46,125 C46,112 58,112 58,125 L64,125 L64,95 C64,90 70,90 70,95 L70,138 C62,147 52,152 46,142 Z"
+                fill="#c6a567" />
+              <path
+                d="M154,125 C154,112 142,112 142,125 L136,125 L136,95 C136,90 130,90 130,95 L130,138 C138,147 148,152 154,142 Z"
+                fill="#c6a567" />
+              <path d="M73,74 L100,82 L127,74 L122,115 L100,132 L78,115 Z" fill="#eab308" stroke="#92400e"
+                stroke-width="1.5" />
+              <path d="M87,88 H100 V101 H87 Z" fill="#dc2626" />
+              <path d="M100,88 H113 V101 H100 Z" fill="#ffffff" />
+              <path d="M87,101 H100 V114 H87 Z" fill="#ffffff" />
+              <path d="M100,101 H113 V114 H100 Z" fill="#dc2626" />
+              <polygon points="100,95 102,100 107,100 103,103 104,108 100,105 96,108 97,103 93,100 98,100"
+                fill="#18181b" />
+              <path d="M100,152 C88,148 77,138 77,127 C89,129 97,138 100,152 Z" fill="#84cc16" />
+              <path d="M100,152 C112,148 123,138 123,127 C111,129 103,138 100,152 Z" fill="#84cc16" />
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xl sm:text-2xl font-black tracking-tight text-[#004B8D] leading-none">MBG</span>
+              <span class="text-sm sm:text-base font-extrabold text-[#002D5A] leading-none">MBAKUL BAGIAN GAUL</span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-slate-500 font-medium mt-1">Otomotif &amp; Suku Cadang Motor Bekas —
+              Sinergi Kualitas Terpercaya</p>
+          </div>
+        </div>
+
+        <div class="hidden sm:flex items-center gap-4">
+          <div class="text-right">
+            <div class="flex items-center justify-end gap-1.5">
+              <span class="text-xs font-black tracking-wider text-[#004B8D] uppercase">PART BEKAS</span>
+            </div>
+            <div class="text-[11px] text-slate-500 font-medium mt-0.5">
+              WA Pusat: <span id="header-wa" class="font-mono font-bold text-[#002D5A]">+6281234567890</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navbar Biru Astra Honda (#004B8D -> #002D5A) -->
+    <div class="bg-gradient-to-r from-[#004B8D] to-[#002D5A] text-white border-b-2 border-[#E60012]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <button onclick="document.getElementById('search-input')?.focus()"
+            class="flex items-center gap-2 text-white/95 hover:text-white text-xs sm:text-sm font-semibold py-1.5 px-3 rounded-lg hover:bg-white/10 transition">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+            <span>Cari Suku Cadang</span>
+          </button>
+          <span class="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-blue-200/80 font-medium">
+            <span>Beranda</span>
+            <i class="fa-solid fa-chevron-right text-[9px]"></i>
+            <span>Otomotif</span>
+            <i class="fa-solid fa-chevron-right text-[9px]"></i>
+            <span class="text-white font-bold">Part Motor MBG</span>
+          </span>
+        </div>
+
+        <nav class="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm font-bold">
+          <button onclick="navigateTo('catalog')" id="btn-nav-catalog"
+            class="px-4 py-1.5 rounded-lg bg-white text-[#004B8D] shadow-xs hover:bg-blue-50 transition">
+            Katalog Produk
+          </button>
+          <div id="nav-auth-area" class="flex items-center gap-2"></div>
+          <span class="hidden sm:inline-block h-4 w-px bg-white/25"></span>
+          <a id="nav-wa-link" href="https://wa.me/6281234567890" target="_blank"
+            class="hidden sm:inline-flex items-center gap-1.5 text-white/95 hover:text-blue-200">
+            <i class="fa-brands fa-whatsapp text-base text-emerald-300"></i>
+            <span>Hubungi Kami</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- ======================================================== -->
+  <!-- HERO BANNER PROMAX ELEGAN                                -->
+  <!-- ======================================================== -->
+  <section class="hero-pattern text-white py-10 px-4 sm:px-6 lg:px-8 border-b border-blue-900 relative overflow-hidden">
+    <div class="absolute -right-16 -bottom-16 w-80 h-80 rounded-full bg-blue-500/10 blur-3xl pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+      <div>
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-extrabold uppercase tracking-widest text-cyan-200 mb-3 backdrop-blur-sm">
+          <i class="fa-solid fa-shield-halved text-amber-300"></i> Copotan Teruji &bull; Original Garansi Normal
+        </div>
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight">
+          Pilih Sparepart Motor Favorit Anda
+        </h1>
+        <p class="text-xs sm:text-sm text-blue-100 max-w-xl mt-2 leading-relaxed font-medium">
+          Katalog onderdil copotan original &amp; variasi motor terpercaya se-Indonesia. Cek kondisi fisik asli, stok
+          real-time, dan hubungi langsung sellernya via WhatsApp.
+        </p>
+      </div>
+
+      <!-- Hero Fast Stats Widget -->
+      <div
+        class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-6 shadow-2xl">
+        <div class="text-center">
+          <div id="hero-stat-products" class="text-2xl font-black text-amber-300 mono">8</div>
+          <div class="text-[11px] text-blue-200 font-semibold mt-0.5">Part Tersedia</div>
+        </div>
+        <div class="w-px h-10 bg-white/20"></div>
+        <div class="text-center">
+          <div class="text-2xl font-black text-emerald-300 mono">100%</div>
+          <div class="text-[11px] text-blue-200 font-semibold mt-0.5">Direct Chat WA</div>
+        </div>
+        <div class="w-px h-10 bg-white/20"></div>
+        <div class="text-center">
+          <div class="text-2xl font-black text-cyan-300 mono">3 Role</div>
+          <div class="text-[11px] text-blue-200 font-semibold mt-0.5">Admin &bull; Seller &bull; Buyer</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== -->
+  <!-- VIEW 1: KATALOG PEMBELI                                  -->
+  <!-- ======================================================== -->
+  <main id="view-catalog" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+    <!-- Tab Kategori Horizontal Modern -->
+    <div class="space-y-4">
+      <div id="category-tabs"
+        class="flex items-center justify-start sm:justify-center gap-5 sm:gap-7 overflow-x-auto border-b border-slate-200 px-2 pb-1 scrollbar-none">
+      </div>
+    </div>
+
+    <!-- Filter & Search Toolbar Pro -->
+    <div
+      class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm">
+      <div class="relative flex-1">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-[#004B8D] text-sm"></i>
+        <input type="text" id="search-input" oninput="debounceSearch()"
+          placeholder="Cari karburator, shockbreaker, CDI unit, master rem, kaliper..."
+          class="w-full pl-11 pr-10 py-2.5 bg-slate-50 border border-slate-200 focus:bg-white focus:border-[#004B8D] rounded-xl text-sm text-zinc-900 outline-none transition font-medium" />
+        <button id="clear-search" onclick="clearSearch()"
+          class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 text-xs">
+          <i class="fa-solid fa-circle-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <select id="filter-category-select" onchange="applyFilters()"
+          class="px-3.5 py-2.5 bg-slate-50 border border-slate-200 focus:border-[#004B8D] rounded-xl text-xs sm:text-sm font-semibold text-zinc-800 outline-none">
+          <option value="Semua">Semua Kategori (6)</option>
+        </select>
+
+        <select id="filter-sort-select" onchange="applyFilters()"
+          class="px-3.5 py-2.5 bg-slate-50 border border-slate-200 focus:border-[#004B8D] rounded-xl text-xs sm:text-sm font-semibold text-zinc-800 outline-none">
+          <option value="newest">Urutkan: Terbaru</option>
+          <option value="price-asc">Harga: Termurah</option>
+          <option value="price-desc">Harga: Termahal</option>
+          <option value="stock-desc">Stok: Terbanyak</option>
+        </select>
+
+        <button id="btn-filter-pilihan" onclick="togglePilihanFilter()"
+          class="px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-[#004B8D] text-xs font-bold text-zinc-700 flex items-center gap-1.5 transition">
+          <i class="fa-solid fa-star text-[#E60012]"></i>
+          <span>Pilihan</span>
+        </button>
+
+        <button id="btn-reset-filters" onclick="resetFilters()"
+          class="hidden px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#004B8D] hover:bg-blue-50 transition">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Jumlah & Layanan WA -->
+    <div class="flex items-center justify-between text-xs text-zinc-500 px-1 font-medium">
+      <p id="count-info">Menampilkan <span class="font-bold text-zinc-900">0</span> barang</p>
+      <span>Pusat Bantuan WA: <strong id="catalog-wa" class="font-mono text-[#004B8D]">+6281234567890</strong></span>
+    </div>
+
+    <!-- Grid Produk Pro Max -->
+    <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- VIEW 2: DASHBOARD MANAGEMENT (ADMIN & SELLER)            -->
+  <!-- ======================================================== -->
+  <main id="view-dashboard" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+    <div class="flex items-center justify-between bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+      <div>
+        <h2 id="dashboard-main-title" class="text-xl sm:text-2xl font-black text-[#002D5A] flex items-center gap-2">
+          <i class="fa-solid fa-gauge-high text-[#004B8D]"></i> Panel Pengelola
+        </h2>
+        <p id="dashboard-sub-title" class="text-xs sm:text-sm text-zinc-500 mt-1 font-medium">Kelola stok inventaris
+          part motor dan operasional lapak.</p>
+      </div>
+      <button onclick="navigateTo('catalog')"
+        class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-zinc-700 text-xs font-bold rounded-xl transition flex items-center gap-1.5">
+        <i class="fa-solid fa-eye"></i>
+        <span>Lihat Toko Publik</span>
+      </button>
+    </div>
+
+    <!-- KPI Ringkasan Modern Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Total Part</p>
+          <p id="kpi-products" class="text-3xl font-black text-[#002D5A] mono mt-1">0</p>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#004B8D] flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-boxes-stacked"></i></div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Unit Stok</p>
+          <p id="kpi-stock" class="text-3xl font-black text-emerald-600 mono mt-1">0</p>
+        </div>
+        <div
+          class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-cubes"></i></div>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Part Unggulan</p>
+          <p id="kpi-featured" class="text-3xl font-black text-[#E60012] mono mt-1">0</p>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-red-50 text-[#E60012] flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-star"></i></div>
+      </div>
+      <div id="kpi-users-card"
+        class="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex items-center justify-between">
+        <div>
+          <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">User Sistem</p>
+          <p id="kpi-users" class="text-3xl font-black text-[#0072CE] mono mt-1">0</p>
+        </div>
+        <div class="w-12 h-12 rounded-2xl bg-sky-50 text-[#0072CE] flex items-center justify-center text-xl shadow-xs">
+          <i class="fa-solid fa-users"></i></div>
+      </div>
+    </div>
+
+    <!-- Tab Navigasi Dashboard -->
+    <div class="flex items-center gap-4 border-b border-slate-200 text-sm font-bold">
+      <button onclick="switchDashTab('products')" id="dash-tab-products"
+        class="pb-3 text-[#004B8D] border-b-2 border-[#004B8D]">
+        Kelola Produk Part
+      </button>
+      <button onclick="switchDashTab('users')" id="dash-tab-users" class="pb-3 text-zinc-500 hover:text-zinc-800">
+        Kelola Pengguna (Admin)
+      </button>
+      <button onclick="switchDashTab('settings')" id="dash-tab-settings" class="pb-3 text-zinc-500 hover:text-zinc-800">
+        Pengaturan WA Toko
+      </button>
+    </div>
+
+    <!-- Section 1: Produk Part (Seller & Admin) -->
+    <div id="dash-sec-products" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-20">
+        <h3 id="form-product-title"
+          class="text-sm font-extrabold text-[#002D5A] pb-3 mb-4 border-b border-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-circle-plus text-[#004B8D]"></i> Tambah Sparepart Baru
+        </h3>
+        <form onsubmit="handleSaveProduct(event)" class="space-y-3.5 text-xs">
+          <input type="hidden" id="p-id" value="0">
+          <div>
+            <label class="block font-bold text-zinc-700 mb-1">Nama Part Motor *</label>
+            <input type="text" id="p-nama" required placeholder="Contoh: Karburator Keihin PE 28"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">Kategori *</label>
+              <select id="p-kategori"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold">
+                <option value="Mesin & Transmisi">Mesin &amp; Transmisi</option>
+                <option value="Kaki-kaki & Velg">Kaki-kaki &amp; Velg</option>
+                <option value="Pengereman">Pengereman</option>
+                <option value="Kelistrikan">Kelistrikan</option>
+                <option value="Body & Aksesoris">Body &amp; Aksesoris</option>
+                <option value="Knalpot">Knalpot</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">Kondisi</label>
+              <select id="p-kondisi"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-semibold">
+                <option value="Copotan Original">Copotan Original</option>
+                <option value="Bekas Bagus">Bekas Bagus</option>
+                <option value="Restorasi">Restorasi</option>
+                <option value="Perlu Servis Ringan">Perlu Servis Ringan</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">Harga (Rp) *</label>
+              <input type="number" id="p-harga" required min="0" placeholder="150000"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+            </div>
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">Stok Unit *</label>
+              <input type="number" id="p-stok" required min="0" value="1"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+            </div>
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="block font-bold text-zinc-700">Foto Sparepart (Upload / Tempel URL)</label>
+            <div id="p-image-preview-wrapper"
+              class="hidden relative rounded-xl overflow-hidden border border-slate-200 h-28 bg-slate-50">
+              <img id="p-image-preview" src="" class="w-full h-full object-cover">
+              <button type="button" onclick="clearProductImage()"
+                class="absolute top-1.5 right-1.5 px-2 py-0.5 bg-rose-600 text-white rounded text-[10px] font-bold shadow-xs">Hapus</button>
+            </div>
+            <label for="p-image-file"
+              class="flex items-center justify-center gap-2 w-full py-2 px-3 rounded-xl border border-dashed border-slate-300 hover:border-[#004B8D] bg-slate-50 hover:bg-slate-100 text-xs font-bold text-zinc-700 cursor-pointer transition">
+              <i class="fa-solid fa-camera"></i>
+              <span>Pilih File Gambar Lokal</span>
+            </label>
+            <input type="file" id="p-image-file" accept="image/*" class="hidden"
+              onchange="handleImageFileUpload(event)">
+            <input type="url" id="p-image" oninput="handleImageUrlInput()" placeholder="Atau tempel link URL foto..."
+              class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl outline-none text-[11px]">
+          </div>
+
+          <div>
+            <label class="block font-bold text-zinc-700 mb-1">Keterangan Kondisi &amp; Kelengkapan</label>
+            <textarea id="p-desc" rows="3" placeholder="Kondisi skep, drat baut, kelengkapan..."
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] resize-none"></textarea>
+          </div>
+          <label
+            class="flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-200 cursor-pointer hover:bg-blue-50/50 transition">
+            <input type="checkbox" id="p-unggulan" class="w-4 h-4 text-[#004B8D] rounded">
+            <span class="font-bold text-zinc-800">Tandai Barang Pilihan! (Bintang Unggulan)</span>
+          </label>
+          <div class="flex gap-2 pt-1">
+            <button type="submit"
+              class="flex-1 py-2.5 rounded-xl bg-[#004B8D] hover:bg-[#002D5A] text-white font-bold transition shadow-xs">Simpan</button>
+            <button type="button" onclick="resetProductForm()"
+              class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-zinc-700 rounded-xl font-semibold">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="p-5 border-b border-slate-100 font-extrabold text-[#002D5A] flex justify-between items-center">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-cubes text-[#004B8D]"></i> Daftar Stok Produk
+            Anda</span>
+          <span id="dash-product-count"
+            class="text-xs text-zinc-500 font-semibold px-2.5 py-1 bg-slate-100 rounded-full">0 Barang</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b border-slate-200 text-zinc-600 font-bold uppercase tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Barang</th>
+                <th class="py-3 px-4">Kategori</th>
+                <th class="py-3 px-4">Harga</th>
+                <th class="py-3 px-4 text-center">Stok</th>
+                <th class="py-3 px-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dash-product-tbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Kelola Pengguna (Admin Saja) -->
+    <div id="dash-sec-users" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm sticky top-20">
+        <h3 id="form-user-title"
+          class="text-sm font-extrabold text-[#002D5A] pb-3 mb-4 border-b border-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-user-plus text-[#004B8D]"></i> Tambah Pengguna Baru
+        </h3>
+        <form onsubmit="handleSaveUser(event)" class="space-y-3.5 text-xs">
+          <input type="hidden" id="u-id" value="0">
+          <div>
+            <label class="block font-bold text-zinc-700 mb-1">Nama Lengkap *</label>
+            <input type="text" id="u-name" required placeholder="Budi Santoso"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+          </div>
+          <div>
+            <label class="block font-bold text-zinc-700 mb-1">Email Login *</label>
+            <input type="email" id="u-email" required placeholder="budi@gmail.com"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">Role *</label>
+              <select id="u-role" onchange="toggleStoreNameField(this.value)"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold">
+                <option value="pembeli">Pembeli</option>
+                <option value="seller">Seller / Lapak</option>
+                <option value="admin">Admin Pusat</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-zinc-700 mb-1">No. WhatsApp</label>
+              <input type="text" id="u-phone" placeholder="628123456789"
+                class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+            </div>
+          </div>
+          <div id="u-store-wrapper" class="hidden">
+            <label class="block font-bold text-zinc-700 mb-1">Nama Toko / Lapak (Khusus Seller)</label>
+            <input type="text" id="u-store" placeholder="Contoh: Joko Motor Bekas Gaul"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+          </div>
+          <div>
+            <label class="block font-bold text-zinc-700 mb-1">Password</label>
+            <input type="password" id="u-pass" placeholder="Default: password123"
+              class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D]">
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button type="submit"
+              class="flex-1 py-2.5 rounded-xl bg-[#004B8D] hover:bg-[#002D5A] text-white font-bold transition shadow-xs">Simpan
+              User</button>
+            <button type="button" onclick="resetUserForm()"
+              class="px-3 py-2.5 bg-slate-100 hover:bg-slate-200 text-zinc-700 rounded-xl font-semibold">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="lg:col-span-8 bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
+        <div class="p-5 border-b border-slate-100 font-extrabold text-[#002D5A] flex justify-between items-center">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-users text-[#004B8D]"></i> Master 3 Role
+            Pengguna</span>
+          <span id="dash-user-count" class="text-xs text-zinc-500 font-semibold px-2.5 py-1 bg-slate-100 rounded-full">0
+            Pengguna</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 border-b border-slate-200 text-zinc-600 font-bold uppercase tracking-wider">
+              <tr>
+                <th class="py-3 px-4">Nama &amp; Toko</th>
+                <th class="py-3 px-4">Email</th>
+                <th class="py-3 px-4">Role</th>
+                <th class="py-3 px-4">No. WA</th>
+                <th class="py-3 px-4 text-center">Part</th>
+                <th class="py-3 px-4 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dash-user-tbody" class="divide-y divide-slate-100"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Settings WA Pusat -->
+    <div id="dash-sec-settings"
+      class="hidden max-w-xl bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+      <h3 class="text-base font-extrabold text-[#002D5A] flex items-center gap-2">
+        <i class="fa-brands fa-whatsapp text-emerald-600 text-xl"></i> Pengaturan Nomor WhatsApp Pusat MBG
+      </h3>
+      <p class="text-xs text-zinc-500 font-medium">Nomor ini menjadi kontak darurat / admin pusat di header halaman.</p>
+      <form onsubmit="handleSaveSettings(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-zinc-700 mb-1">Nomor WhatsApp Pusat</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-zinc-400">+</span>
+            <input type="text" id="setting-wa-input" required placeholder="6281234567890"
+              class="w-full pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-sm outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500">
+          </div>
+        </div>
+        <button type="submit"
+          class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition shadow-xs">
+          Simpan Nomor WhatsApp
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- MODAL DETAIL PART MOTOR PRO -->
+  <div id="modal-detail"
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      class="max-w-lg w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="closeDetailModal()"
+        class="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 hover:bg-slate-200 text-zinc-800 flex items-center justify-center shadow-md transition z-10">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+      <div class="h-64 bg-slate-50 border-b border-slate-100 flex items-center justify-center p-6 relative">
+        <img id="detail-img" src="" alt="Part Motor" class="max-h-full max-w-full object-contain filter drop-shadow-sm">
+        <div id="detail-pilihan-badge" class="absolute top-4 left-4 hidden">
+          <span
+            class="px-3 py-1 rounded-full text-xs font-black bg-rose-50 text-[#E60012] border border-rose-200 flex items-center gap-1 shadow-sm">
+            <i class="fa-solid fa-star"></i> Pilihan Unggulan!
+          </span>
+        </div>
+      </div>
+      <div class="p-6 space-y-4">
+        <div class="flex items-center justify-between text-xs text-zinc-500">
+          <span id="detail-category" class="font-extrabold uppercase tracking-wider text-[#004B8D]">Kategori</span>
+          <span id="detail-condition"
+            class="font-bold px-2.5 py-0.5 bg-slate-100 rounded-full text-zinc-700">Kondisi</span>
+        </div>
+        <h3 id="detail-title" class="text-xl font-black text-[#002D5A] leading-snug">Nama Part Motor</h3>
+        <div id="detail-seller-info"
+          class="text-xs text-slate-500 flex items-center gap-2 p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+          <i class="fa-solid fa-store text-emerald-600 text-sm"></i>
+          <div>
+            <span class="text-[10px] text-slate-400 block font-medium">Lapak Penjual:</span>
+            <span id="detail-seller-name" class="font-bold text-slate-800 text-xs">Lapak Seller</span>
+          </div>
+        </div>
+        <div id="detail-price" class="text-2xl font-black text-[#004B8D] mono">Rp 0</div>
+
+        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs text-zinc-700 leading-relaxed">
+          <div class="font-bold text-zinc-900 mb-1 flex items-center gap-1.5"><i
+              class="fa-solid fa-circle-info text-blue-600"></i> Keterangan Fisik &amp; Kelengkapan:</div>
+          <p id="detail-desc" class="whitespace-pre-line text-zinc-600 font-medium"></p>
+        </div>
+
+        <div class="pt-2 flex gap-3">
+          <a id="detail-wa-btn" href="#" target="_blank"
+            class="flex-1 py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Chat Seller via WhatsApp Sekarang</span>
+          </a>
+          <button onclick="closeDetailModal()"
+            class="px-5 py-3 bg-slate-100 hover:bg-slate-200 text-zinc-700 font-bold text-xs rounded-xl transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL AUTH LENGKAP -->
+  <div id="view-login"
+    class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div
+      class="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+      <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-white/80 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="bg-gradient-to-r from-[#004B8D] to-[#002D5A] p-6 text-white text-center border-b-2 border-[#E60012]">
+        <h2 class="text-xl font-black">Portal Pengguna MBG</h2>
+        <p class="text-xs text-blue-100 mt-1 font-medium">Sistem Otentikasi: Admin, Seller &amp; Pembeli</p>
+      </div>
+
+      <div class="flex border-b border-slate-200 bg-slate-50 text-xs font-bold">
+        <button id="auth-tab-btn-login" onclick="switchAuthMode('login')"
+          class="flex-1 py-3 text-[#004B8D] bg-white border-b-2 border-[#004B8D]">
+          Masuk Akun
+        </button>
+        <button id="auth-tab-btn-register" onclick="switchAuthMode('register')"
+          class="flex-1 py-3 text-slate-500 hover:text-slate-800">
+          Daftar Baru
+        </button>
+      </div>
+
+      <div class="p-6">
+        <!-- Pilihan Masuk Cepat / Role Shortcut -->
+        <div id="quick-login-container" class="mb-5 p-3.5 bg-slate-50 border border-slate-200 rounded-2xl">
+          <div class="text-[11px] font-bold text-slate-500 uppercase mb-2">Pilih Peran Masuk (3 Role):</div>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="selectLoginRole('admin')" id="role-btn-admin"
+              class="py-2.5 px-1 bg-white hover:bg-blue-50 border-2 border-[#004B8D] rounded-xl text-center shadow-xs transition cursor-pointer">
+              <i class="fa-solid fa-user-shield text-[#004B8D] text-base mb-1"></i>
+              <div class="text-[11px] font-black text-slate-800">Admin</div>
+              <div class="text-[8px] text-slate-400 font-medium">Master Panel</div>
+            </button>
+            <button type="button" onclick="selectLoginRole('seller')" id="role-btn-seller"
+              class="py-2.5 px-1 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-400 rounded-xl text-center shadow-xs transition cursor-pointer">
+              <i class="fa-solid fa-store text-emerald-600 text-base mb-1"></i>
+              <div class="text-[11px] font-black text-slate-800">Seller</div>
+              <div class="text-[8px] text-slate-400 font-medium">Kelola Toko</div>
+            </button>
+            <button type="button" onclick="selectLoginRole('pembeli')" id="role-btn-pembeli"
+              class="py-2.5 px-1 bg-white hover:bg-amber-50 border border-slate-200 hover:border-amber-400 rounded-xl text-center shadow-xs transition cursor-pointer">
+              <i class="fa-solid fa-user text-amber-600 text-base mb-1"></i>
+              <div class="text-[11px] font-black text-slate-800">Pembeli</div>
+              <div class="text-[8px] text-slate-400 font-medium">Katalog & Order</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- FORM LOGIN -->
+        <form id="form-login-manual" onsubmit="handleManualLogin(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Akun</label>
+            <div class="relative">
+              <i class="fa-regular fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="email" id="login-email" required placeholder="admin@mbakul.com"
+                class="w-full pl-10 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+            </div>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Password</label>
+            <div class="relative">
+              <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input type="password" id="login-password" required placeholder="Masukkan password"
+                class="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+              <button type="button" onclick="togglePassVisibility('login-password', this)"
+                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <label class="flex items-center gap-1.5 cursor-pointer text-slate-600">
+              <input type="checkbox" id="login-remember" class="w-3.5 h-3.5 rounded text-[#004B8D]">
+              <span>Ingat Saya</span>
+            </label>
+            <a href="javascript:void(0)"
+              onclick="alert('Silakan hubungi Admin Pusat via WhatsApp untuk reset password.')"
+              class="text-[#004B8D] hover:underline font-bold">Lupa Password?</a>
+          </div>
+          <button type="submit"
+            class="w-full py-2.5 rounded-xl bg-[#004B8D] hover:bg-[#002D5A] text-white font-bold transition shadow-sm text-sm">
+            Masuk ke Akun
+          </button>
+        </form>
+
+        <!-- FORM REGISTRASI -->
+        <form id="form-register-manual" onsubmit="handleManualRegister(event)" class="hidden space-y-3.5 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Nama Lengkap *</label>
+            <input type="text" id="reg-name" required placeholder="Contoh: Rian Pratama"
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Aktif *</label>
+            <input type="email" id="reg-email" required placeholder="rian@gmail.com"
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Daftar Sebagai *</label>
+              <select id="reg-role" onchange="toggleRegStoreField(this.value)"
+                class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none font-bold">
+                <option value="pembeli">Pembeli</option>
+                <option value="seller">Seller / Lapak</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">No. WhatsApp *</label>
+              <input type="text" id="reg-phone" required placeholder="08123456789"
+                class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+            </div>
+          </div>
+          <div id="reg-store-wrapper" class="hidden">
+            <label class="block font-bold text-slate-700 mb-1">Nama Toko / Lapak Anda *</label>
+            <input type="text" id="reg-store" placeholder="Contoh: Rian Motor Copotan"
+              class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Password *</label>
+            <div class="relative">
+              <input type="password" id="reg-password" required placeholder="Minimal 6 karakter"
+                class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+              <button type="button" onclick="togglePassVisibility('reg-password', this)"
+                class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+          <button type="submit"
+            class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition shadow-sm text-sm">
+            Daftar Akun Sekarang
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PROFILE USER -->
+  <div id="modal-profile" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-300">
+      <div class="p-5 bg-gradient-to-r from-[#004B8D] to-[#002D5A] text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-id-badge"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-base leading-tight">Profil Pengguna</h3>
+            <p class="text-[11px] text-blue-200/80">Informasi akun & keamanan login Anda</p>
+          </div>
+        </div>
+        <button onclick="closeProfileModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="form-profile" onsubmit="handleUpdateProfile(event)" class="p-6 space-y-4 text-xs">
+        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200">
+          <div>
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Role Akun</div>
+            <div id="prof-role-badge" class="font-extrabold text-[#004B8D] text-sm mt-0.5">Admin</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Email (Permanen)</div>
+            <div id="prof-email" class="font-mono font-bold text-slate-700 text-xs mt-0.5">user@mbakul.com</div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nama Lengkap</label>
+          <input type="text" id="prof-name" required
+            class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">No. WhatsApp / HP</label>
+          <input type="text" id="prof-phone" placeholder="08123456789"
+            class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium font-mono">
+        </div>
+
+        <div id="prof-store-wrapper" class="hidden">
+          <label class="block font-bold text-slate-700 mb-1">Nama Toko / Lapak Motor</label>
+          <input type="text" id="prof-store" placeholder="Nama Lapak Anda"
+            class="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+        </div>
+
+        <div class="pt-2 border-t border-slate-100">
+          <label class="block font-bold text-slate-700 mb-1">Ganti Password (Kosongkan jika tidak diubah)</label>
+          <div class="relative">
+            <input type="password" id="prof-pass" placeholder="Password baru minimal 6 karakter"
+              class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:bg-white focus:ring-2 focus:ring-[#004B8D] font-medium">
+            <button type="button" onclick="togglePassVisibility('prof-pass', this)"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2">
+          <button type="button" onclick="closeProfileModal()"
+            class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition">
+            Batal
+          </button>
+          <button type="submit"
+            class="flex-1 py-2.5 rounded-xl bg-[#004B8D] hover:bg-[#002D5A] text-white font-bold transition shadow-sm">
+            Simpan Perubahan
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL KONFIRMASI LOGOUT -->
+  <div id="modal-logout-confirm" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-slate-100 overflow-hidden p-6 text-center transform transition-all duration-300">
+      <div class="w-14 h-14 mx-auto rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 text-2xl mb-4">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </div>
+      <h3 class="text-base font-extrabold text-slate-900 mb-1">Konfirmasi Keluar</h3>
+      <p class="text-xs text-slate-500 mb-6">Apakah Anda yakin ingin keluar dari sesi akun saat ini?</p>
+      
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="closeLogoutModal()"
+          class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-bold hover:bg-slate-50 transition text-xs">
+          Batal
+        </button>
+        <button type="button" onclick="confirmLogout()"
+          class="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold transition shadow-sm text-xs">
+          Ya, Keluar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- FOOTER RESMI ASTRA STYLE -->
+  <footer class="bg-[#002D5A] text-blue-100 border-t-4 border-[#004B8D] mt-16">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+      <div class="flex items-center gap-3">
+        <span
+          class="px-2.5 py-1 rounded-lg bg-[#004B8D] border border-blue-400/30 text-white font-black tracking-wide shadow-xs">MBG</span>
+        <div>
+          <div class="text-white font-extrabold text-sm">Mbakul Bagian Gaul (MBG)</div>
+          <div class="text-blue-300/80 mt-0.5">Suku Cadang &amp; Onderdil Motor Bekas — Kualitas Terpercaya</div>
+        </div>
+      </div>
+      <div class="text-blue-200/80 text-center sm:text-right font-medium">
+        <span>Arsitektur Express.js &bull; Database MySQL &bull; 3 Roles Multi-User</span>
+        <div class="text-[11px] text-blue-300/60 mt-0.5">&copy; 2026 MBG Republik Indonesia. All rights reserved.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+
+</html>
