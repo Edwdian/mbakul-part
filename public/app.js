@@ -994,6 +994,11 @@ function checkoutViaWhatsApp() {
     itemsListText += `${idx + 1}. *${item.nama}* (${item.qty} unit) - ${formatRupiah(subtotal)}\n`;
   });
 
+  const isTransferOrQris = selectedPaymentMethodVal.includes('Transfer') || selectedPaymentMethodVal.includes('QRIS');
+  const proofStatusText = hasProof 
+    ? '✅ Bukti transfer/scan QRIS sudah dilampirkan (Foto struk dikirimkan di chat ini untuk diverifikasi Seller)'
+    : (isTransferOrQris ? '⏳ Menunggu transfer/scan QRIS & konfirmasi bukti struk dari Seller' : '💵 Pembayaran Tunai saat barang diterima (COD)');
+
   const waMessage = 
 `*PESANAN SPAREPART MOTOR MBG*
 =========================
@@ -1002,13 +1007,13 @@ Halo *${sellerTitle}*, saya ingin memesan part motor berikut:
 ${itemsListText}
 *TOTAL PEMBAYARAN:* ${formatRupiah(grandTotal)}
 *METODE PEMBAYARAN:* ${selectedPaymentMethodVal}
-*STATUS BUKTI TRANSFER:* ${hasProof ? '✅ Sudah Dilampirkan (Foto struk dikirim menyusul di chat ini)' : 'Menunggu nomor rekening / instruksi pembayaran'}
+*STATUS PEMBAYARAN:* ${proofStatusText}
 
 *DATA PEMESAN:*
 - Nama & No HP: ${customerInfo}
 - Alamat / Catatan: ${address || '-'}
 
-Mohon konfirmasi pesanan dan proses pengiriman barang. Terima kasih!`;
+Mohon konfirmasi pesanan dan verifikasi pembayaran. Setelah pembayaran tervalidasi oleh Seller, mohon segera infokan jadwal pengiriman/resi. Terima kasih!`;
 
   const waUrl = `https://wa.me/${primaryPhone}?text=${encodeURIComponent(waMessage)}`;
   window.open(waUrl, '_blank');
