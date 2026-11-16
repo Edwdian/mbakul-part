@@ -5,6 +5,9 @@ let currentKategori = 'Semua';
 let onlyPilihan = false;
 let searchTimeout = null;
 let cachedProducts = [];
+let cart = JSON.parse(localStorage.getItem('mbg_cart') || '[]');
+let currentDetailProductId = null;
+let selectedPaymentMethodVal = 'Transfer Bank (BCA / Mandiri / BRI)';
 
 const categoriesList = [
   'Semua',
@@ -22,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadInitialData();
   await loadProducts();
   renderHomeFeaturedProducts();
+  updateCartBadge();
 });
 
 // Toast Notifikasi Halus & Menarik
@@ -247,10 +251,14 @@ function renderProductsGrid(products) {
             <div class="mt-3.5 text-xl font-black text-[#004B8D] mono">${formatRupiah(item.harga)}</div>
           </div>
         </div>
-        <div class="p-5 pt-0">
-          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="w-full py-3 px-4 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-xs transition duration-150">
-            <i class="fa-brands fa-whatsapp text-lg"></i>
-            <span>Tanya Seller via WA</span>
+        <div class="p-5 pt-0 flex gap-2">
+          <button onclick="addToCart(${item.id})" class="flex-1 py-2.5 px-3 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-98 text-slate-900 font-extrabold text-xs flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer">
+            <i class="fa-solid fa-cart-plus text-sm"></i>
+            <span>+ Keranjang</span>
+          </button>
+          <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="py-2.5 px-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-extrabold text-xs flex items-center justify-center gap-1.5 shadow-xs transition duration-150" title="Chat Seller">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span class="hidden sm:inline">WA</span>
           </a>
         </div>
       </div>
@@ -263,6 +271,7 @@ function openDetailModal(id) {
   const item = cachedProducts.find(p => p.id == id);
   if (!item) return;
 
+  currentDetailProductId = item.id;
   const waPhone = (item.seller_phone || storeSettings.store_wa || '6281234567890').replace(/[^0-9]/g, '');
   const waText = `Halo ${item.seller_name || 'Seller'}, saya ingin tanya sparepart *${item.nama}* (Harga: ${formatRupiah(item.harga)}) di MBG. Apakah stok masih tersedia?`;
   const imgUrl = item.image_url ? item.image_url : getSvgPlaceholder(item.kategori, item.nama);
@@ -278,6 +287,13 @@ function openDetailModal(id) {
   document.getElementById('detail-pilihan-badge').classList.toggle('hidden', item.unggulan != 1);
 
   document.getElementById('modal-detail').classList.remove('hidden');
+}
+
+function addToCartFromDetail() {
+  if (currentDetailProductId) {
+    addToCart(currentDetailProductId);
+    closeDetailModal();
+  }
 }
 
 function closeDetailModal() {
@@ -453,6 +469,13 @@ function navigateTo(view) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   } else {
     // view === 'catalog'
+    // Cek apakah pengguna sudah login sebelum melihat semua part
+    if (!currentUser) {
+      showToast('Silakan login terlebih dahulu untuk menjelajahi seluruh part!', 'error');
+      openLoginModal();
+      return;
+    }
+
     if (homeSec) homeSec.classList.add('hidden');
     if (dashSec) dashSec.classList.add('hidden');
     if (catalogSec) catalogSec.classList.remove('hidden');
@@ -594,12 +617,28 @@ async function handleManualRegister(e) {
   const name = document.getElementById('reg-name').value.trim();
   const email = document.getElementById('reg-email').value.trim();
   const role = document.getElementById('reg-role').value;
-  const phone = document.getElementById('reg-phone').value.trim();
-  const store_name = document.getElementById('reg-store').value.trim();
+  const phone = document.getElementById('reg-phone').value.replace(/[^0-9]/g, '');
+  const store_name = document.getElementById('reg-store')?.value.trim();
   const password = document.getElementById('reg-password').value;
+  const passwordConfirm = document.getElementById('reg-password-confirm')?.value;
 
   if (!name || !email || !password) {
     showToast('Nama, email, dan password wajib diisi!', 'error');
+    return;
+  }
+
+  if (password.length < 6) {
+    showToast('Password minimal 6 karakter!', 'error');
+    return;
+  }
+
+  if (passwordConfirm !== undefined && password !== passwordConfirm) {
+    showToast('Konfirmasi password tidak cocok! Silakan periksa kembali.', 'error');
+    return;
+  }
+
+  if (!phone || phone.length < 9) {
+    showToast('Nomor WhatsApp harus valid (hanya angka minimal 9 digit)!', 'error');
     return;
   }
 
@@ -713,6 +752,230 @@ async function handleUpdateProfile(e) {
   } catch (err) {
     showToast('Error update profil: ' + err.message, 'error');
   }
+}
+
+// ========================================================
+// SISTEM KERANJANG BELANJA & PEMESANAN VIA WHATSAPP
+// ========================================================
+function saveCart() {
+  localStorage.setItem('mbg_cart', JSON.stringify(cart));
+  updateCartBadge();
+}
+
+function updateCartBadge() {
+  const badge = document.getElementById('cart-badge');
+  if (!badge) return;
+  const totalCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+  badge.innerText = totalCount;
+  badge.classList.toggle('hidden', totalCount === 0);
+}
+
+function addToCart(productId) {
+  const product = cachedProducts.find(p => p.id == productId);
+  if (!product) {
+    showToast('Produk tidak ditemukan!', 'error');
+    return;
+  }
+
+  if (product.stok <= 0) {
+    showToast('Maaf, stok barang ini sedang habis!', 'error');
+    return;
+  }
+
+  const existing = cart.find(item => item.id == product.id);
+  if (existing) {
+    if (existing.qty >= product.stok) {
+      showToast(`Jumlah melebihi sisa stok (${product.stok} unit)!`, 'error');
+      return;
+    }
+    existing.qty += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      nama: product.nama,
+      harga: Number(product.harga),
+      kategori: product.kategori,
+      stok: Number(product.stok),
+      seller_id: product.seller_id,
+      seller_name: product.seller_name,
+      seller_phone: product.seller_phone,
+      store_name: product.store_name,
+      image_url: product.image_url,
+      qty: 1
+    });
+  }
+
+  saveCart();
+  showToast(`"${product.nama}" berhasil ditambahkan ke Keranjang!`);
+}
+
+function updateCartItemQty(id, delta) {
+  const item = cart.find(i => i.id == id);
+  if (!item) return;
+
+  item.qty += delta;
+  if (item.qty <= 0) {
+    cart = cart.filter(i => i.id != id);
+  } else if (item.qty > item.stok) {
+    item.qty = item.stok;
+    showToast(`Maksimal stok tersedia hanya ${item.stok} unit!`, 'error');
+  }
+
+  saveCart();
+  renderCartModal();
+}
+
+function removeCartItem(id) {
+  cart = cart.filter(i => i.id != id);
+  saveCart();
+  renderCartModal();
+  showToast('Item dihapus dari keranjang.');
+}
+
+function selectPaymentMethod(methodKey) {
+  ['tf', 'qris', 'cod'].forEach(m => {
+    const el = document.getElementById(`opt-pay-${m}`);
+    if (el) {
+      if (m === methodKey) {
+        el.className = 'p-3 border-2 border-[#004B8D] rounded-xl flex flex-col items-center gap-1 cursor-pointer transition payment-opt bg-blue-50/70 font-bold';
+      } else {
+        el.className = 'p-3 border-2 border-slate-200 hover:border-slate-300 rounded-xl flex flex-col items-center gap-1 cursor-pointer transition payment-opt bg-white';
+      }
+    }
+  });
+
+  if (methodKey === 'tf') {
+    selectedPaymentMethodVal = 'Transfer Bank (BCA / Mandiri / BRI)';
+  } else if (methodKey === 'qris') {
+    selectedPaymentMethodVal = 'QRIS Semua E-Wallet (GoPay, OVO, Dana, ShopeePay)';
+  } else if (methodKey === 'cod') {
+    selectedPaymentMethodVal = 'COD (Bayar Tunai di Tempat / Cash On Delivery)';
+  }
+}
+
+function openCartModal() {
+  const modal = document.getElementById('modal-cart');
+  if (!modal) return;
+  renderCartModal();
+  selectPaymentMethod('tf');
+
+  // Isi data pemesan otomatis jika sudah login
+  const custInfoInput = document.getElementById('order-customer-info');
+  if (custInfoInput && currentUser) {
+    custInfoInput.value = `${currentUser.name} (${currentUser.phone || ''})`;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+function closeCartModal() {
+  const modal = document.getElementById('modal-cart');
+  if (modal) modal.classList.add('hidden');
+}
+
+function renderCartModal() {
+  const container = document.getElementById('cart-items-container');
+  const totalPriceEl = document.getElementById('cart-total-price');
+  if (!container || !totalPriceEl) return;
+
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div class="py-12 text-center text-slate-400">
+        <i class="fa-solid fa-cart-shopping text-3xl mb-2 block text-slate-300"></i>
+        <p class="font-bold text-slate-600 text-sm">Keranjang Belanja Masih Kosong</p>
+        <p class="text-xs text-slate-400 mt-0.5">Pilih sparepart motor favorit Anda di katalog!</p>
+      </div>
+    `;
+    totalPriceEl.innerText = 'Rp 0';
+    return;
+  }
+
+  let grandTotal = 0;
+  container.innerHTML = cart.map(item => {
+    const subtotal = item.harga * item.qty;
+    grandTotal += subtotal;
+    const imgUrl = item.image_url ? item.image_url : getSvgPlaceholder(item.kategori, item.nama);
+
+    return `
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-2xl flex items-center justify-between gap-3 text-xs">
+        <img src="${imgUrl}" alt="${item.nama}" class="w-14 h-14 object-contain rounded-xl bg-white p-1 border border-slate-200">
+        <div class="flex-1 min-w-0">
+          <h4 class="font-bold text-slate-800 truncate">${item.nama}</h4>
+          <div class="text-[11px] text-[#004B8D] font-black mono mt-0.5">${formatRupiah(item.harga)}</div>
+          <div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5">
+            <i class="fa-solid fa-store text-emerald-600 text-[9px]"></i>
+            <span class="truncate">${item.store_name || item.seller_name || 'Mitra MBG'}</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="flex items-center border border-slate-200 rounded-lg bg-white overflow-hidden">
+            <button onclick="updateCartItemQty(${item.id}, -1)" class="w-6 h-6 hover:bg-slate-100 font-bold text-slate-600">-</button>
+            <span class="w-7 text-center font-extrabold text-slate-800">${item.qty}</span>
+            <button onclick="updateCartItemQty(${item.id}, 1)" class="w-6 h-6 hover:bg-slate-100 font-bold text-slate-600">+</button>
+          </div>
+          <button onclick="removeCartItem(${item.id})" class="text-rose-500 hover:text-rose-700 p-1.5" title="Hapus">
+            <i class="fa-solid fa-trash-can text-sm"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  totalPriceEl.innerText = formatRupiah(grandTotal);
+}
+
+function checkoutViaWhatsApp() {
+  if (cart.length === 0) {
+    showToast('Keranjang Anda masih kosong!', 'error');
+    return;
+  }
+
+  const customerInfo = document.getElementById('order-customer-info')?.value.trim();
+  const address = document.getElementById('order-address')?.value.trim();
+
+  if (!customerInfo) {
+    showToast('Nama Pemesan & No. HP wajib diisi!', 'error');
+    document.getElementById('order-customer-info')?.focus();
+    return;
+  }
+
+  // Kelompokkan pesanan berdasarkan nomor WhatsApp seller (atau CS pusat jika 1 seller)
+  // Ambil seller pertama atau CS pusat jika campur
+  const primaryPhone = (cart[0].seller_phone || storeSettings.store_wa || '6281234567890').replace(/[^0-9]/g, '');
+  const sellerTitle = cart[0].store_name || cart[0].seller_name || 'Seller MBG';
+
+  let grandTotal = 0;
+  let itemsListText = '';
+
+  cart.forEach((item, idx) => {
+    const subtotal = item.harga * item.qty;
+    grandTotal += subtotal;
+    itemsListText += `${idx + 1}. *${item.nama}* (${item.qty} unit) - ${formatRupiah(subtotal)}\n`;
+  });
+
+  const waMessage = 
+`*PESANAN SPAREPART MOTOR MBG*
+=========================
+Halo *${sellerTitle}*, saya ingin memesan part motor berikut:
+
+${itemsListText}
+*TOTAL PEMBAYARAN:* ${formatRupiah(grandTotal)}
+*METODE PEMBAYARAN:* ${selectedPaymentMethodVal}
+
+*DATA PEMESAN:*
+- Nama & No HP: ${customerInfo}
+- Alamat / Catatan: ${address || '-'}
+
+Mohon konfirmasi ketersediaan fisik barang dan nomor rekening / barcode QRIS / petunjuk pengiriman COD. Terima kasih!`;
+
+  const waUrl = `https://wa.me/${primaryPhone}?text=${encodeURIComponent(waMessage)}`;
+  window.open(waUrl, '_blank');
+
+  // Bersihkan keranjang setelah order dikirim
+  cart = [];
+  saveCart();
+  closeCartModal();
+  showToast('Pesanan berhasil dibuat dan diarahkan ke WhatsApp Penjual!');
 }
 
 // Dashboard Tabs Switch
