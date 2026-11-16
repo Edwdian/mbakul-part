@@ -1663,3 +1663,152 @@ async function updateOrderStatus(orderId, newStatus) {
     showToast('Terjadi kesalahan jaringan.', 'error');
   }
 }
+
+
+// ==========================================
+// MODAL & LOGIC CEK PESANAN PEMBELI
+// ==========================================
+async function openBuyerOrdersModal() {
+  const modal = document.getElementById('modal-buyer-orders');
+  if (modal) modal.classList.remove('hidden');
+
+  await loadBuyerOrders();
+}
+
+function closeBuyerOrdersModal() {
+  const modal = document.getElementById('modal-buyer-orders');
+  if (modal) modal.classList.add('hidden');
+}
+
+async function loadBuyerOrders() {
+  const listContainer = document.getElementById('buyer-orders-list');
+  const emptyState = document.getElementById('buyer-orders-empty');
+  if (!listContainer) return;
+
+  listContainer.innerHTML = '<div class="text-center py-8 text-xs text-slate-400 font-bold"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Memuat daftar pesanan...</div>';
+
+  try {
+    const res = await fetch('/api/buyer/orders');
+    const data = await res.json();
+
+    if (data.success && data.orders && data.orders.length > 0) {
+      if (emptyState) emptyState.classList.add('hidden');
+      renderBuyerOrders(data.orders);
+    } else {
+      listContainer.innerHTML = '';
+      if (emptyState) emptyState.classList.remove('hidden');
+    }
+  } catch (err) {
+    console.error('Failed to load buyer orders:', err);
+    listContainer.innerHTML = '<div class="text-center py-6 text-xs text-rose-500 font-bold">Gagal memuat pesanan. Silakan refresh halaman.</div>';
+  }
+}
+
+function renderBuyerOrders(orders) {
+  const listContainer = document.getElementById('buyer-orders-list');
+  if (!listContainer) return;
+
+  // Sinkronkan ke cachedOrders agar modal preview bukti struk bisa membaca gambarnya
+  orders.forEach(o => {
+    if (!cachedOrders.some(co => co.id === o.id)) {
+      cachedOrders.push(o);
+    }
+  });
+
+  listContainer.innerHTML = orders.map(o => {
+    let items = [];
+    try {
+      items = typeof o.items === 'string' ? JSON.parse(o.items) : (o.items || []);
+    } catch (e) {
+      items = [];
+    }
+
+    let statusHtml = '';
+    if (o.status === 'confirmed') {
+      statusHtml = `
+        <span class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-extrabold text-[11px] inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-check text-emerald-600"></i> Dikonfirmasi &amp; Lunas
+        </span>
+      `;
+    } else if (o.status === 'pending') {
+      statusHtml = `
+        <span class="px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[11px] inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-clock text-amber-600"></i> Menunggu Konfirmasi Seller
+        </span>
+      `;
+    } else if (o.status === 'rejected') {
+      statusHtml = `
+        <span class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-extrabold text-[11px] inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-circle-xmark text-rose-600"></i> Pembayaran Ditolak
+        </span>
+      `;
+    } else {
+      statusHtml = `
+        <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-extrabold text-[11px] inline-flex items-center gap-1.5">
+          <i class="fa-solid fa-check-double text-blue-600"></i> Pesanan Selesai
+        </span>
+      `;
+    }
+
+    const dateStr = new Date(o.created_at).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    const itemsSummary = items.map(it => `
+      <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+        <span class="font-bold text-slate-800"><span class="text-[#004B8D] font-black">${it.qty}x</span> ${it.nama}</span>
+        <span class="font-mono text-slate-600">${formatRupiah(it.subtotal || (it.harga * it.qty))}</span>
+      </div>
+    `).join('');
+
+    const proofButton = o.proof_image ? `
+      <button type="button" onclick="openProofViewer(${o.id})" class="text-xs font-bold text-[#004B8D] hover:underline flex items-center gap-1 cursor-pointer">
+        <i class="fa-solid fa-receipt text-emerald-600"></i> Lihat Bukti Bayar / Struk
+      </button>
+    ` : '<span class="text-xs text-slate-400 italic">Tanpa struk transfer</span>';
+
+    const sellerPhoneClean = (o.seller_phone || '6281234567890').replace(/[^0-9]/g, '');
+    const waSellerLink = `https://wa.me/${sellerPhoneClean}?text=${encodeURIComponent(`Halo ${o.store_name || 'Seller'}, saya ingin menanyakan pesanan #MBG-${o.id}`)}`;
+
+    return `
+      <div class="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono font-black text-sm text-[#004B8D]">#MBG-${o.id}</span>
+              <span class="text-slate-300">�</span>
+              <span class="text-[11px] text-slate-500">${dateStr}</span>
+            </div>
+            <div class="text-xs text-slate-600 font-semibold mt-0.5">
+              Toko: <span class="font-bold text-slate-900">${o.store_name || o.seller_name || 'Lapak MBG'}</span>
+            </div>
+          </div>
+          <div>
+            ${statusHtml}
+          </div>
+        </div>
+
+        <div class="bg-slate-50 rounded-xl p-3 space-y-1">
+          ${itemsSummary}
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 text-xs">
+          <div class="space-y-1">
+            <div class="text-slate-500 font-medium">Metode: <strong class="text-slate-800">${o.payment_method}</strong></div>
+            <div>${proofButton}</div>
+          </div>
+          <div class="flex items-center gap-3 justify-between sm:justify-end">
+            <div class="text-right">
+              <span class="text-[10px] text-slate-400 uppercase font-black tracking-wider block">Total Bayar</span>
+              <span class="text-base font-black text-[#004B8D] mono">${formatRupiah(o.total_price)}</span>
+            </div>
+            <a href="${waSellerLink}" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-2xs">
+              <i class="fa-brands fa-whatsapp text-sm"></i>
+              <span class="hidden sm:inline">Hubungi Seller</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
