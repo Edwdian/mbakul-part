@@ -119,7 +119,7 @@
               <span class="text-xs font-black tracking-wider text-[#004B8D] uppercase">PART BEKAS</span>
             </div>
             <div class="text-[11px] text-slate-500 font-medium mt-0.5">
-              WA Pusat: <span id="header-wa" class="font-mono font-bold text-[#002D5A]">+6281234567890</span>
+              CS Pusat MBG: <span id="header-wa" class="font-mono font-bold text-[#002D5A]">+6281234567890</span>
             </div>
           </div>
         </div>
@@ -332,7 +332,7 @@
         Kelola Pengguna (Admin)
       </button>
       <button onclick="switchDashTab('settings')" id="dash-tab-settings" class="pb-3 text-zinc-500 hover:text-zinc-800">
-        Pengaturan WA Toko
+        CS Pusat Platform
       </button>
     </div>
 
@@ -542,25 +542,29 @@
       </div>
     </div>
 
-    <!-- Section 3: Settings WA Pusat -->
+    <!-- Section 3: Settings WA Layanan Pelanggan (CS Pusat) -->
     <div id="dash-sec-settings"
       class="hidden max-w-xl bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
       <h3 class="text-base font-extrabold text-[#002D5A] flex items-center gap-2">
-        <i class="fa-brands fa-whatsapp text-emerald-600 text-xl"></i> Pengaturan Nomor WhatsApp Pusat MBG
+        <i class="fa-solid fa-headset text-emerald-600 text-xl"></i> Layanan Pelanggan &amp; Pengaduan (CS Pusat)
       </h3>
-      <p class="text-xs text-zinc-500 font-medium">Nomor ini menjadi kontak darurat / admin pusat di header halaman.</p>
+      <div class="p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-xs text-slate-700 leading-relaxed">
+        <strong class="text-[#004B8D] block mb-1">ℹ️ Informasi Konsep Kontak:</strong>
+        Nomor ini adalah kontak <strong>Admin Platform MBG</strong> untuk customer service, pendaftaran reseller baru, dan bantuan teknis. Untuk pertanyaan &amp; transaksi suku cadang, pembeli akan langsung diarahkan ke nomor <strong>WhatsApp masing-masing Seller</strong> di setiap produk.
+      </div>
       <form onsubmit="handleSaveSettings(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block font-bold text-zinc-700 mb-1">Nomor WhatsApp Pusat</label>
+          <label class="block font-bold text-zinc-700 mb-1">Nomor WhatsApp CS Pusat</label>
           <div class="relative">
             <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-zinc-400">+</span>
             <input type="text" id="setting-wa-input" required placeholder="6281234567890"
               class="w-full pl-8 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl font-mono text-sm outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500">
           </div>
+          <span class="text-[11px] text-slate-400 mt-1 block">Format: diawali kode negara tanpa tanda plus, contoh: 6281234567890</span>
         </div>
         <button type="submit"
           class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition shadow-xs">
-          Simpan Nomor WhatsApp
+          Simpan Nomor CS Pusat
         </button>
       </form>
     </div>
